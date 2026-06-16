@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#faf6f2}
+  input,textarea,select,button{font-family:inherit}
+  ::selection{background:#d4717e;color:#fff}
+  @keyframes fadeUp{from{transform:translateY(28px)}to{transform:none}}
+  @keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(26px,-30px) scale(1.08)}}
+  @keyframes slideDown{from{transform:translateY(-12px)}to{transform:none}}
+  @keyframes pop{from{transform:scale(.97)}to{transform:none}}
+  .nav-links{display:flex}
+  .burger{display:none}
+  @media(max-width:880px){
+    .nav-links{display:none}
+    .burger{display:flex}
+    .nav-cta{display:none}
+  }
+  header nav a{transition:background .28s ease,color .28s ease}
+  header nav a:hover{background:#f2c4ce;color:#a23f4d}
+  .proc-card{background:rgba(250,246,242,.92);border-radius:18px;padding:24px 22px;display:flex;flex-direction:column;gap:14px}
+  .proc-step{position:relative;display:grid;grid-template-columns:64px 1fr;gap:0;padding-bottom:34px}
+  .proc-step:last-child{padding-bottom:0}
+  .proc-line{position:absolute;left:31px;top:64px;bottom:6px;width:2px;background:rgba(46,61,53,.14)}
+  .proc-step:last-child .proc-line{display:none}
+  .proc-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;z-index:1;box-shadow:0 6px 18px rgba(46,61,53,.08)}
+  .proc-body{padding:4px 0 0 22px}
+  @media(max-width:520px){
+    .proc-step{grid-template-columns:54px 1fr}
+    .proc-line{left:26px;top:54px}
+    .proc-icon{width:54px;height:54px;font-size:24px}
+    .proc-body{padding-left:16px}
+  }
+  .rev-dot{height:8px;border-radius:999px;border:none;padding:0;cursor:pointer;transition:width .3s ease,background .3s ease;background:rgba(212,113,126,.3);width:8px}
+  .rev-dot-active{background:#d4717e;width:28px}
+  .proj-photo-dot{height:7px;width:7px;border-radius:999px;border:none;padding:0;cursor:pointer;transition:width .3s ease,background .3s ease;background:rgba(255,255,255,.45)}
+  .proj-photo-dot-active{background:#fff;width:22px}
+  .proj-modal-grid{display:grid;grid-template-columns:1fr 360px}
+  @media(max-width:780px){.proj-modal-grid{grid-template-columns:1fr;grid-template-rows:300px auto}}
+  .rev-track{display:flex;width:100%;will-change:transform;transition:transform .42s cubic-bezier(.4,0,.2,1)}
+  .plan-card{background:#fff;border:1.5px solid rgba(46,61,53,.07);border-radius:24px;padding:34px 28px;display:flex;flex-direction:column;min-height:560px;transition:box-shadow .3s ease}
+  .plan-card:hover{box-shadow:0 18px 44px rgba(46,61,53,.1)}
+  .plan-card-popular{background:#eef6f0}
+  .plan-card-popular:hover{box-shadow:0 18px 44px rgba(122,171,143,.18)}
+  /* Selected plan: border + shadow in the card's own colour (pink default, green for popular) */
+  .plan-card-selected{border:2px solid #d4717e!important;box-shadow:0 12px 36px rgba(212,113,126,.2)!important}
+  .plan-card-popular.plan-card-selected{border-color:#7aab8f!important;box-shadow:0 12px 36px rgba(122,171,143,.26)!important}
+  .plan-badge{display:inline-block;background:#f2c4ce;color:#a23f4d;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:16px;width:fit-content}
+  .plan-badge-popular{background:#7aab8f!important;color:#fff!important}
+  .plan-price{font-family:'Cormorant',serif;font-size:40px;font-weight:600;color:#2e3d35;line-height:1;margin-bottom:4px}
+  .plan-price-popular{color:#2e3d35!important}
+  .plan-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(212,113,126,.12);color:#a23f4d;font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;line-height:1.2}
+  .plan-card-popular .plan-chip{background:rgba(122,171,143,.16);color:#4f7a64}
+  .plan-oldprice{display:inline-block;font-size:14px;font-weight:600;color:rgba(46,61,53,.5);text-decoration:line-through;text-decoration-color:rgba(212,113,126,.65);margin-bottom:5px}
+  .plan-btn{margin-top:20px;background:#d4717e;color:#fff;border:none;padding:14px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s ease;font-family:'Manrope',sans-serif;width:100%}
+  .plan-btn:hover{background:#c25e6b}
+  .plan-btn-popular{background:#7aab8f!important;color:#fff!important}
+  .plan-btn-popular:hover{background:#6a9a7e!important}
+  .pricing-slide{flex-shrink:0;width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media(max-width:860px){.pricing-slide{grid-template-columns:1fr}}
+  @media(max-width:680px){.footer-grid{grid-template-columns:1fr!important}.stats-row{grid-template-columns:1fr!important}.modal-info{grid-template-columns:1fr!important}}
+  @media(max-width:520px){
+    .sec-x{padding-left:16px!important;padding-right:16px!important}
+    .hero-photo{max-height:420px}
+    .hero-btns{flex-direction:column}
+    .hero-btns button{width:100%}
+    .plan-card{min-height:0!important}
+    .modal-info{padding-left:20px!important;padding-right:20px!important}
+  }
+  .pricing-dot{height:6px;width:6px;border-radius:999px;border:none;padding:0;cursor:pointer;transition:width .35s ease,background .35s ease;background:rgba(46,61,53,.18);flex-shrink:0}
+  .pricing-dot-active{background:#d4717e;width:22px}
+  .stats-card{border-radius:24px;padding:2.2rem 2rem;position:relative;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease;box-shadow:0 20px 48px rgba(160,100,120,.2),0 6px 16px rgba(160,100,120,.12)}
+  .stats-card:hover{transform:translateY(-6px);box-shadow:0 32px 64px rgba(160,100,120,.28),0 8px 20px rgba(160,100,120,.16)}
+  .stats-card::after{content:'';position:absolute;width:150px;height:150px;border-radius:50%;right:-46px;top:-46px;background:rgba(255,255,255,.18)}
+  .stats-c1{background:linear-gradient(145deg,#fdf0f2,#f2c4ce);color:#2e3d35}
+  .stats-c1::after{background:rgba(255,255,255,.55)}
+  .stats-c2{background:linear-gradient(145deg,#f2c4ce,#d4717e);color:#fff}
+  .stats-c3{background:linear-gradient(145deg,#7aab8f,#5e9277);color:#fff}
+  .adv-card{box-shadow:0 6px 28px rgba(212,113,126,.09);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1),box-shadow .3s ease}
+  .adv-card:hover{box-shadow:0 22px 52px rgba(46,61,53,.13);transform:translateY(-5px)}
+  .adv-hidden{opacity:0;transform:translateY(34px)}
+  .adv-hidden:hover{transform:translateY(34px)}
+  .btn-sec{transition:all .25s ease}
+  .btn-sec:hover{background:#7aab8f!important;color:#fff!important;border-color:#7aab8f!important}
+  .btn-pri{transition:all .25s ease}
+  /* ====== sakura branch responsive ====== */
+  .sakura-branch{width:48%;max-width:560px}
+  @media(max-width:600px){
+    .sakura-branch{width:92%;max-width:none;left:-10px;top:-6px}
+  }
+  /* ====== mobile-only tweaks ====== */
+  @media(max-width:600px){
+    /* hero tags centered */
+    .hero-tags{text-align:center!important}
+    /* hero photo square + centered */
+    .hero-photo{aspect-ratio:1/1!important;max-height:none!important;max-width:360px;margin:0 auto}
+    .hero-photo-wrap{display:flex;justify-content:center}
+    /* stats bigger font on mobile */
+    .stats-card > div:nth-child(2){font-size:3.8rem!important}
+    .stats-card > div:nth-child(3){font-size:14px!important}
+  }
+</style>
+
+</helmet>
+
+<div style="min-height:100vh;background:#faf6f2;color:#2e3d35;font-family:'Manrope',sans-serif;position:relative;overflow-x:hidden;font-size:17px;line-height:1.6">
+
+  <div style="position:fixed;top:-120px;right:-100px;width:480px;height:480px;border-radius:50%;background:#f2c4ce;filter:blur(90px);opacity:.55;pointer-events:none;animation:floatBlob 16s ease-in-out infinite;z-index:0"></div>
+  <div style="position:fixed;bottom:-160px;left:-120px;width:440px;height:440px;border-radius:50%;background:#7aab8f;filter:blur(100px);opacity:.32;pointer-events:none;animation:floatBlob 20s ease-in-out infinite reverse;z-index:0"></div>
+  <canvas id="sakura-canvas" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+  <header style="position:sticky;top:0;z-index:50;background:#faf6f2;border-bottom:1px solid rgba(46,61,53,.08)">
+    <div class="sec-x" style="max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:stretch;justify-content:space-between;gap:20px;min-height:80px">
+      <a onClick="{{ goHome }}" style="display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none;color:#2e3d35">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" style="width: 54px; height: 54px; flex-shrink: 0; position: relative; top: 4px"><path fill="#faf6f2" d="M702.47,829.5c0-83.88-30.4-158.56-77.69-206.57,26.05-29.41,41.89-68.07,41.89-110.44,0-92.05-74.62-166.67-166.67-166.67s-166.67,74.62-166.67,166.67c0,42.38,15.84,81.03,41.89,110.44-47.3,48.01-77.69,122.69-77.69,206.57,0,51.68,11.55,99.87,31.47,140.48-56.97-20.73-109.11-51.53-154.26-90.24,87.44,74.96,201.06,120.25,325.26,120.25s237.82-45.29,325.26-120.25c-45.15,38.71-97.29,69.5-154.26,90.24,19.92-40.61,31.47-88.8,31.47-140.48ZM615.94,740.06c8.8,0,15.94,7.14,15.94,15.94s-7.14,15.94-15.94,15.94-15.94-7.14-15.94-15.94,7.14-15.94,15.94-15.94ZM372.96,917.1c-14.93,0-27.04-12.11-27.04-27.04s12.11-27.04,27.04-27.04,27.04,12.11,27.04,27.04-12.11,27.04-27.04,27.04ZM384.06,771.94c-8.8,0-15.94-7.14-15.94-15.94s7.14-15.94,15.94-15.94,15.94,7.14,15.94,15.94-7.14,15.94-15.94,15.94ZM500,927.74c-8.8,0-15.94-7.14-15.94-15.94s7.14-15.94,15.94-15.94,15.94,7.14,15.94,15.94-7.14,15.94-15.94,15.94ZM500,798.98c-14.93,0-27.04-12.11-27.04-27.04s12.11-27.04,27.04-27.04,27.04,12.11,27.04,27.04-12.11,27.04-27.04,27.04ZM500,615.29c-56.21,0-101.78-45.57-101.78-101.78s45.57-101.78,101.78-101.78,101.78,45.57,101.78,101.78-45.57,101.78-101.78,101.78ZM627.04,917.1c-14.93,0-27.04-12.11-27.04-27.04s12.11-27.04,27.04-27.04,27.04,12.11,27.04,27.04-12.11,27.04-27.04,27.04Z"></path><path fill="#d4717e" d="M859.34,847.65c.07-.08.15-.15.22-.23,4.25-4.4,8.42-8.87,12.5-13.42.11-.12.22-.24.33-.37,4.07-4.53,8.05-9.14,11.95-13.83.1-.12.19-.23.29-.35,1.95-2.35,3.89-4.72,5.8-7.1.03-.04.06-.08.09-.12,1.92-2.4,3.82-4.81,5.69-7.24.03-.03.05-.07.08-.1,1.85-2.4,3.67-4.82,5.48-7.25.14-.18.27-.37.41-.55,3.56-4.81,7.03-9.68,10.42-14.62.18-.26.35-.52.53-.78,3.35-4.9,6.61-9.86,9.78-14.88.17-.28.35-.55.53-.83,1.58-2.51,3.14-5.03,4.67-7.57.07-.12.14-.23.21-.35,1.49-2.46,2.95-4.94,4.4-7.43.13-.23.27-.46.4-.69,1.47-2.54,2.91-5.09,4.34-7.65.17-.3.33-.59.49-.89,1.39-2.52,2.77-5.05,4.12-7.6.04-.08.08-.15.12-.23,1.37-2.59,2.72-5.2,4.04-7.81.2-.39.4-.79.6-1.18,2.62-5.2,5.15-10.46,7.59-15.76.2-.43.4-.86.6-1.3,1.21-2.64,2.39-5.29,3.55-7.95.08-.18.16-.36.23-.54,1.1-2.53,2.17-5.06,3.23-7.61.17-.41.34-.81.51-1.22,1.09-2.65,2.16-5.31,3.21-7.99.16-.4.31-.8.46-1.19.97-2.5,1.93-5.01,2.86-7.53.11-.3.22-.59.33-.89.99-2.69,1.95-5.39,2.9-8.1.18-.51.35-1.02.53-1.53.94-2.72,1.86-5.44,2.75-8.17,0-.02.01-.04.02-.07.9-2.76,1.76-5.53,2.61-8.3.17-.56.34-1.11.51-1.67.83-2.75,1.65-5.52,2.43-8.29.06-.21.12-.42.17-.63.74-2.61,1.45-5.24,2.14-7.87.14-.54.29-1.09.43-1.63.72-2.76,1.42-5.52,2.09-8.3.11-.46.22-.91.33-1.37.6-2.52,1.19-5.05,1.75-7.59.1-.46.21-.92.31-1.38.61-2.79,1.2-5.58,1.76-8.39.12-.58.23-1.17.35-1.75.53-2.65,1.03-5.31,1.52-7.98.04-.25.09-.5.14-.75.51-2.84.99-5.69,1.45-8.55.1-.64.21-1.28.31-1.92.45-2.87.89-5.75,1.29-8.64.02-.15.04-.3.06-.45.38-2.77.74-5.55,1.08-8.34.08-.64.16-1.27.23-1.91.34-2.86.65-5.74.94-8.62.05-.46.09-.92.13-1.38.25-2.6.48-5.2.7-7.81.05-.57.1-1.14.14-1.7.23-2.88.43-5.78.6-8.67.04-.61.07-1.22.11-1.84.15-2.65.29-5.31.4-7.98.02-.4.04-.79.05-1.19.11-2.93.2-5.87.26-8.81.01-.68.03-1.36.04-2.04.05-3,.09-6,.09-9C1000,223.86,776.14,0,500,0S0,223.86,0,500c0,3.01.04,6.01.09,9,.01.68.02,1.36.04,2.04.06,2.94.15,5.88.26,8.81.02.4.04.8.05,1.19.11,2.67.24,5.33.4,7.98.03.61.07,1.22.1,1.84.18,2.9.38,5.79.6,8.67.04.57.09,1.14.14,1.7.21,2.61.44,5.21.7,7.81.04.46.09.92.13,1.38.29,2.88.6,5.75.94,8.62.08.64.15,1.28.23,1.91.34,2.79.69,5.57,1.08,8.34.02.15.04.3.06.45.4,2.89.84,5.77,1.29,8.64.1.64.2,1.28.31,1.92.46,2.86.94,5.71,1.45,8.55.04.25.09.5.14.75.48,2.67.99,5.33,1.52,7.98.12.58.23,1.17.35,1.75.57,2.8,1.15,5.6,1.76,8.39.1.46.21.92.31,1.38.56,2.54,1.15,5.07,1.75,7.59.11.46.21.91.33,1.37.67,2.78,1.37,5.54,2.09,8.3.14.55.29,1.09.43,1.63.69,2.63,1.41,5.26,2.14,7.87.06.21.11.42.17.63.79,2.77,1.6,5.54,2.43,8.29.17.56.34,1.11.51,1.67.85,2.78,1.72,5.55,2.61,8.3,0,.02.01.04.02.07.89,2.74,1.81,5.46,2.75,8.17.18.51.35,1.02.53,1.53.94,2.71,1.91,5.41,2.9,8.1.11.3.22.59.33.89.93,2.52,1.89,5.03,2.86,7.53.15.4.31.8.46,1.19,1.05,2.67,2.12,5.34,3.21,7.99.17.41.34.81.51,1.22,1.06,2.55,2.13,5.08,3.23,7.61.08.18.16.36.23.54,1.16,2.66,2.35,5.31,3.55,7.95.2.43.4.86.6,1.3,2.44,5.3,4.97,10.56,7.59,15.76.2.4.4.79.6,1.18,1.33,2.62,2.67,5.22,4.04,7.81.04.08.08.15.12.23,1.35,2.55,2.72,5.08,4.12,7.6.16.3.33.6.49.89,1.42,2.56,2.87,5.12,4.34,7.65.13.23.27.46.4.69,1.45,2.49,2.91,4.97,4.4,7.43.07.12.14.23.21.35,1.54,2.54,3.1,5.06,4.67,7.57.17.28.35.55.53.83,3.17,5.02,6.43,9.98,9.78,14.88.18.26.35.52.53.78,3.39,4.94,6.86,9.81,10.42,14.62.14.18.27.37.41.55,1.81,2.43,3.63,4.85,5.48,7.25.03.03.05.07.08.1,1.88,2.43,3.77,4.85,5.69,7.24.03.04.06.08.09.12,1.91,2.39,3.84,4.75,5.8,7.1.1.12.19.23.29.35,3.9,4.68,7.88,9.29,11.95,13.83.11.12.22.24.33.37,4.09,4.55,8.26,9.02,12.5,13.42.07.08.15.15.22.23,10.84,11.2,22.2,21.9,34.05,32.06.01.01.03.02.04.03,45.15,38.71,97.29,69.5,154.26,90.24-19.92-40.61-31.47-88.8-31.47-140.48,0-83.88,30.4-158.56,77.69-206.57-26.05-29.41-41.89-68.07-41.89-110.44,0-92.05,74.62-166.67,166.67-166.67s166.67,74.62,166.67,166.67c0,42.38-15.84,81.03-41.89,110.44,47.3,48.01,77.69,122.69,77.69,206.57,0,51.68-11.55,99.87-31.47,140.48,56.97-20.73,109.11-51.53,154.26-90.24.01-.01.03-.02.04-.03,11.84-10.15,23.2-20.85,34.05-32.06ZM566.67,204.03c-1.71,21.93-18.27,48.99-66.67,82.93-48.4-33.94-64.95-61-66.66-82.93v-7.63c1.84-22.92,16.94-34.88,30-36.15,2.15-.21,4.15-.31,6.04-.31,15.09,0,22.33,6.52,30.62,16.4,8.29-9.88,15.53-16.4,30.62-16.4,1.88,0,3.89.1,6.04.31,13.06,1.28,28.17,13.23,30.01,36.15v7.63Z"></path><path fill="#faf6f2" d="M536.66,160.25c-2.15-.21-4.15-.31-6.04-.31-15.09,0-22.33,6.52-30.62,16.4-8.29-9.88-15.53-16.4-30.62-16.4-1.88,0-3.89.1-6.04.31-13.06,1.28-28.17,13.23-30,36.15v7.63c1.71,21.93,18.27,48.99,66.66,82.93,48.39-33.94,64.95-61,66.67-82.93v-7.63c-1.84-22.92-16.95-34.88-30.01-36.15Z"></path><circle fill="#2e3d35" cx="500" cy="771.94" r="27.04"></circle><circle fill="#d4717e" cx="500" cy="513.51" r="101.78"></circle><path fill="#2e3d35" d="M372.96,863.02c-14.93,0-27.04,12.11-27.04,27.04s12.11,27.04,27.04,27.04,27.04-12.11,27.04-27.04-12.11-27.04-27.04-27.04Z"></path><path fill="#2e3d35" d="M627.04,863.02c-14.93,0-27.04,12.11-27.04,27.04s12.11,27.04,27.04,27.04,27.04-12.11,27.04-27.04-12.11-27.04-27.04-27.04Z"></path><circle fill="#d4717e" cx="615.94" cy="756" r="15.94"></circle><circle fill="#d4717e" cx="384.06" cy="756" r="15.94"></circle><circle fill="#d4717e" cx="500" cy="911.8" r="15.94"></circle></svg>
+        <span style="display:flex;flex-direction:column;align-items:flex-start;gap:5px">
+          <span style="font-family: 'Cormorant',serif; font-size: 28px; font-weight: 600; letter-spacing: .3px; line-height: 1">Екатерина Булатова</span>
+          <span style="font-size: 12px; letter-spacing: 3.5px; text-transform: uppercase; color: #7aab8f; font-weight: 600; line-height: 1; position: relative; left: 6px; top: 5px">графический дизайнер</span>
+        </span>
+      </a>
+      <nav class="nav-links" style="align-items:stretch;gap:4px">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+          <a onClick="{{ item.onClick }}" style="{{ item.style }}">{{ item.label }}</a>
+        </sc-for>
+      </nav>
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="nav-cta" onClick="{{ goPricing }}" style="background:#d4717e;color:#fff;border:none;padding:12px 22px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s ease;box-shadow:0 6px 18px rgba(212,113,126,.28)" style-hover="background:#c25e6b;transform:translateY(-1px)">Обсудить проект</button>
+        <button class="burger" onClick="{{ toggleMobile }}" style="width:44px;height:44px;align-items:center;justify-content:center;background:#f2c4ce;border:none;border-radius:12px;cursor:pointer;flex-direction:column;gap:5px">
+          <span style="width:20px;height:2px;background:#2e3d35;border-radius:2px"></span>
+          <span style="width:20px;height:2px;background:#2e3d35;border-radius:2px"></span>
+          <span style="width:20px;height:2px;background:#2e3d35;border-radius:2px"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <sc-if value="{{ mobileOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:60;background:rgba(46,61,53,.4);backdrop-filter:blur(4px)" onClick="{{ toggleMobile }}">
+      <div style="background:#faf6f2;padding:90px 28px 32px;display:flex;flex-direction:column;gap:6px;animation:slideDown .3s ease;box-shadow:0 12px 40px rgba(46,61,53,.18)">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+          <a onClick="{{ item.onClick }}" style="padding:16px 0;font-size:22px;font-family:'Cormorant',serif;font-weight:500;color:#2e3d35;border-bottom:1px solid rgba(46,61,53,.08);cursor:pointer">{{ item.label }}</a>
+        </sc-for>
+        <button onClick="{{ goPricing }}" style="margin-top:18px;background:#d4717e;color:#fff;border:none;padding:16px;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer">Обсудить проект</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <button id="back-to-top" onClick="{{ scrollTop }}" aria-label="Наверх" style="position:fixed;right:26px;bottom:26px;z-index:60;width:54px;height:54px;border-radius:50%;border:none;background:#d4717e;color:#faf6f2;cursor:pointer;box-shadow:0 12px 30px rgba(212,113,126,.4);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .3s ease,transform .3s ease,background .25s ease" style-hover="background:#c25e6b">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>
+  </button>
+
+  <main style="position:relative;z-index:1">
+    <img src="images/vetka.png" alt="" aria-hidden="true" class="sakura-branch" style="position:absolute;top:-10px;left:-20px;pointer-events:none;z-index:0;opacity:0.82;user-select:none">
+
+    <!-- ===================== HOME ===================== -->
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Главная">
+
+      <section class="hero-sec sec-x" style="max-width:1200px;margin:0 auto;padding:70px 28px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:56px;align-items:center">
+        <div>
+          <div class="hero-tags" style="font-size:15px;font-weight:700;letter-spacing:2px;color:#7aab8f;margin-bottom:24px;text-transform:uppercase">{{ tagsLine }}</div>
+          <h1 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(42px,6vw,72px);line-height:1.04;margin:0 0 22px;letter-spacing:-.5px">Дизайн, который<br><span style="font-style:italic;color:#d4717e">работает</span> на вас</h1>
+          <p style="font-size:19px;color:rgba(46,61,53,.72);max-width:480px;margin:0 0 34px">Создаю логотипы и фирменный стиль для малого бизнеса и экспертов&nbsp;— чтобы вас узнавали, запоминали и выбирали.</p>
+          <div class="hero-btns" style="display:flex;flex-wrap:wrap;gap:14px">
+            <button onClick="{{ goPricing }}" style="background:#d4717e;color:#fff;border:none;padding:16px 30px;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;transition:all .25s ease;box-shadow:0 10px 26px rgba(212,113,126,.3)" style-hover="background:#c25e6b;transform:translateY(-2px)">Заказать дизайн</button>
+            <button onClick="{{ goPortfolio }}" class="btn-sec" style="background:transparent;color:#2e3d35;border:1.5px solid #7aab8f;padding:16px 30px;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer">Смотреть портфолио</button>
+          </div>
+        </div>
+        <div class="hero-photo-wrap" style="position:relative">
+          <div class="hero-photo" style="position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(46,61,53,.14)">
+            <img src="images/photo1.png" alt="Екатерина Булатова — графический дизайнер" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block">
+          </div>
+        </div>
+      </section>
+
+      <section class="sec-x" style="max-width:1100px;margin:0 auto;padding:10px 28px 60px">
+        <div class="stats-row" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+
+          <div class="stats-card stats-c1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+              <span style="width:8px;height:8px;border-radius:50%;background:#d4717e;flex-shrink:0;display:inline-block"></span>
+              <span style="font-family:'Manrope',sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#d4717e">опыт</span>
+            </div>
+            <div style="font-family:'Cormorant',serif;font-style:italic;font-weight:700;font-size:clamp(2.5rem,9vw,3.4rem);line-height:1;margin-bottom:14px;color:#d4717e">2+</div>
+            <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#d4717e">года в дизайне</div>
+          </div>
+
+          <div class="stats-card stats-c2">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+              <span style="width:8px;height:8px;border-radius:50%;background:#faf6f2;flex-shrink:0;display:inline-block"></span>
+              <span style="font-family:'Manrope',sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#faf6f2">работа</span>
+            </div>
+            <div style="font-family:'Cormorant',serif;font-style:italic;font-weight:700;font-size:clamp(2.5rem,9vw,3.4rem);line-height:1;margin-bottom:14px;color:#faf6f2">50+</div>
+            <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#faf6f2">проектов завершено</div>
+          </div>
+
+          <div class="stats-card stats-c3">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+              <span style="width:8px;height:8px;border-radius:50%;background:#faf6f2;flex-shrink:0;display:inline-block"></span>
+              <span style="font-family:'Manrope',sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#faf6f2">доверие</span>
+            </div>
+            <div style="font-family:'Cormorant',serif;font-style:italic;font-weight:700;font-size:clamp(2.5rem,9vw,3.4rem);line-height:1;margin-bottom:14px;color:#faf6f2">80%</div>
+            <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#faf6f2">клиентов возвращаются</div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="sec-x" style="max-width:1200px;margin:0 auto;padding:40px 28px">
+        <div style="margin-bottom:38px">
+          <span style="display:block;font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#7aab8f;font-weight:700">Мой подход</span>
+          <h2 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(38px,4.5vw,54px);margin:8px 0 0">Почему выбирают меня</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px">
+          <sc-for list="{{ advantages }}" as="a" hint-placeholder-count="4">
+            <div class="adv-card" style="background:#fff;border:1px solid rgba(46,61,53,.07);border-radius:24px;padding:38px 34px;display:flex;flex-direction:column;gap:0">
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+                <span class="adv-num" style="font-family:'Cormorant',serif;font-size:clamp(38px,11vw,48px);font-weight:600;font-style:italic;color:#d4717e;line-height:1">{{ a.n }}</span>
+                <span style="flex:1;height:1px;background:linear-gradient(to right,rgba(212,113,126,.35),transparent)"></span>
+              </div>
+              <h3 style="font-family:'Cormorant',serif;font-weight:600;font-size:26px;line-height:1.2;margin:0 0 14px;color:#2e3d35">{{ a.title }}</h3>
+              <p style="font-family:'Manrope',sans-serif;font-size:15px;color:rgba(46,61,53,.65);margin:0;line-height:1.72">{{ a.text }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section class="sec-x" style="max-width:1200px;margin:0 auto;padding:50px 28px">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:34px">
+          <div>
+            <span style="font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#7aab8f;font-weight:700">Избранные работы</span>
+            <h2 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(38px,4.5vw,54px);margin:10px 0 0">Портфолио</h2>
+          </div>
+          <button onClick="{{ goPortfolio }}" class="btn-sec" style="background:transparent;color:#2e3d35;border:1.5px solid #7aab8f;padding:13px 24px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer">Смотреть все работы</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px">
+          <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
+            <div onClick="{{ p.open }}" style="border-radius:20px;overflow:hidden;background:#fff;border:1px solid rgba(46,61,53,.06);transition:all .3s ease;cursor:pointer" style-hover="transform:translateY(-6px);box-shadow:0 18px 40px rgba(46,61,53,.12)">
+              <div style="aspect-ratio:1/1;background:{{ p.bg }};display:flex;align-items:center;justify-content:center">
+                <span style="font-family:monospace;font-size:12px;letter-spacing:1px;background:rgba(250,246,242,.88);color:#a23f4d;padding:6px 12px;border-radius:999px;font-weight:600">{{ p.ph }}</span>
+              </div>
+              <div style="padding:18px 20px">
+                <span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#7aab8f;font-weight:700">{{ p.category }}</span>
+                <h3 style="font-family:'Cormorant',serif;font-weight:600;font-size:22px;margin:6px 0 0">{{ p.title }}</h3>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="max-width:680px;margin:0 auto;padding:50px 20px">
+        <div style="text-align:center;margin-bottom:44px">
+          <span style="font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#7aab8f;font-weight:700">От заявки до результата</span>
+          <h2 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(38px,4.5vw,54px);margin:10px 0 0">Как происходит работа</h2>
+        </div>
+        <div>
+          <sc-for list="{{ process }}" as="s" hint-placeholder-count="6">
+            <div class="proc-step">
+              <div style="position:relative;display:flex;justify-content:center">
+                <div class="proc-line"></div>
+                <div class="proc-icon" style="background:{{ s.iconBg }};color:{{ s.iconColor }}">
+                  <i class="ti {{ s.icon }}"></i>
+                </div>
+              </div>
+              <div class="proc-body">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px">
+                  <span style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#7aab8f;font-weight:600;line-height:1">{{ s.n }}</span>
+                  <span style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#7aab8f;font-weight:600;line-height:1">{{ s.phase }}</span>
+                </div>
+                <h3 style="font-family:'Cormorant',serif;font-weight:600;font-size:26px;margin:0 0 8px;color:#2e3d35;line-height:1.15">{{ s.title }}</h3>
+                <p style="font-size:15px;color:rgba(46,61,53,.7);margin:0 0 14px;line-height:1.65">{{ s.text }}</p>
+                <span style="display:inline-block;background:#fff;border:1.5px solid rgba(122,171,143,.4);color:#3f6b54;font-size:13px;font-weight:600;padding:7px 16px;border-radius:999px">{{ s.tag }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section class="sec-x" style="max-width:1200px;margin:0 auto;padding:50px 28px">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:34px">
+          <div>
+            <span style="font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#7aab8f;font-weight:700">Что говорят клиенты</span>
+            <h2 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(38px,4.5vw,54px);margin:10px 0 0">Отзывы</h2>
+          </div>
+          <button onClick="{{ goReviews }}" class="btn-sec" style="background:transparent;color:#2e3d35;border:1.5px solid #7aab8f;padding:13px 24px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer">Все отзывы</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px">
+          <sc-for list="{{ reviewsPreview }}" as="r" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid rgba(46,61,53,.06);border-radius:22px;padding:32px;display:flex;flex-direction:column;gap:18px">
+              <div style="color:#d4717e;font-size:19px;letter-spacing:3px">{{ r.stars }}</div>
+              <p style="font-family:'Cormorant',serif;font-style:italic;font-size:21px;line-height:1.45;margin:0;color:#2e3d35;flex:1">«{{ r.text }}»</p>
+              <div style="display:flex;align-items:center;gap:12px;border-top:1px solid rgba(46,61,53,.07);padding-top:18px">
+                <span style="width:44px;height:44px;border-radius:50%;background:#f2c4ce;color:#a23f4d;display:flex;align-items:center;justify-content:center;font-family:'Cormorant',serif;font-size:20px;font-weight:600;flex-shrink:0">{{ r.initial }}</span>
+                <div>
+                  <div style="font-weight:600;font-size:15px">{{ r.name }}</div>
+                  <div style="font-size:13px;color:#7aab8f;font-weight:600">{{ r.service }}</div>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section class="sec-x" style="max-width:1200px;margin:0 auto;padding:50px 28px 80px">
+        <div style="position:relative;overflow:hidden;isolation:isolate;transform:translateZ(0);background:linear-gradient(135deg,#34463c 0%,#2e3d35 50%,#243029 100%);border-radius:28px;padding:clamp(40px,6vw,72px);text-align:center;color:#faf6f2">
+          <div style="position:absolute;top:-80px;left:-60px;width:360px;height:360px;border-radius:50%;background:#d4717e;opacity:.7;filter:blur(60px)"></div>
+          <div style="position:absolute;bottom:-90px;right:-50px;width:360px;height:360px;border-radius:50%;background:#7aab8f;opacity:.75;filter:blur(60px)"></div>
+          <div style="position:absolute;top:40%;left:50%;width:280px;height:280px;border-radius:50%;background:#e8a5b8;opacity:.32;filter:blur(70px);transform:translate(-50%,-30%)"></div>
+          <div style="position:relative">
+            <h2 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(38px,5vw,58px);margin:0 0 16px;line-height:1.1">Расскажите о вашем проекте</h2>
+            <p style="font-size:18px;color:rgba(250,246,242,.78);max-width:520px;margin:0 auto 30px">Отвечу на все вопросы: что войдёт в работу, сколько стоит и когда будет готово.</p>
+            <button onClick="{{ goPricing }}" style="background:#d4717e;color:#fff;border:none;padding:17px 38px;border-radius:16px;font-size:17px;font-weight:600;cursor:pointer;transition:all .25s ease;box-shadow:0 12px 30px rgba(212,113,126,.4)" style-hover="background:#c25e6b;transform:translateY(-2px)">Оставить заявку</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+    </sc-if>
+
+    <!-- ===================== PORTFOLIO ===================== -->
+    <sc-if value="{{ isPortfolio }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Портфолио" class="sec-x" style="max-width:1200px;margin:0 auto;padding:60px 28px 80px">
+      <span style="font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#7aab8f;font-weight:700">Работы</span>
+      <h1 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(40px,5vw,60px);margin:10px 0 8px">Портфолио</h1>
+      <p style="font-size:18px;color:rgba(46,61,53,.7);max-width:560px;margin:0 0 36px">Логотипы, айдентика и визуал для брендов, которые хотят выделяться.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+          <button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px">
+        <sc-for list="{{ projects }}" as="p" hint-placeholder-count="6">
+          <div onClick="{{ p.open }}" style="border-radius:20px;overflow:hidden;background:#fff;border:1px solid rgba(46,61,53,.06);transition:all .3s ease;cursor:pointer" style-hover="transform:translateY(-6px);box-shadow:0 18px 40px rgba(46,61,53,.12)">
+            <div style="aspect-ratio:4/3;background:{{ p.bg }};display:flex;align-items:center;justify-content:center">
+              <span style="font-family:monospace;font-size:12px;letter-spacing:1px;background:rgba(250,246,242,.88);color:#a23f4d;padding:6px 12px;border-radius:999px;font-weight:600">{{ p.ph }}</span>
+            </div>
+            <div style="padding:20px 22px">
+              <span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#7aab8f;font-weight:700">{{ p.category }}</span>
+              <h3 style="font-family:'Cormorant',serif;font-weight:600;font-size:24px;margin:6px 0 6px">{{ p.title }}</h3>
+              <p style="font-size:14px;color:rgba(46,61,53,.66);margin:0">{{ p.desc }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ===================== PRICING ===================== -->
+    <sc-if value="{{ isPricing }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Тарифы" class="sec-x" style="max-width:1200px;margin:0 auto;padding:60px 28px 80px">
+      <div style="text-align:center;margin-bottom:46px">
+        <span style="font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#7aab8f;font-weight:700">Стоимость</span>
+        <h1 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(40px,5vw,60px);margin:10px 0 8px">Тарифы и услуги</h1>
+        <p style="font-size:18px;color:rgba(46,61,53,.7);max-width:520px;margin:0 auto">Прозрачные пакеты под задачу. Выберите подходящий&nbsp;— и расскажите детали в форме ниже.</p>
+      </div>
+      <!-- Apple-style pricing slider -->
+      <div onMouseEnter="{{ pausePricingAuto }}" onMouseLeave="{{ resumePricingAuto }}" style="position:relative;margin-bottom:56px">
+        <!-- Dots navigation -->
+        <div style="display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:28px">
+          <sc-for list="{{ pricingDots }}" as="dot" hint-placeholder-count="2">
+            <button onClick="{{ dot.onClick }}" class="pricing-dot {{ dot.cls }}"></button>
+          </sc-for>
+        </div>
+        <!-- Track -->
+        <div style="overflow:hidden">
+          <div id="pricing-track" style="display:flex;width:100%;transition:transform .5s cubic-bezier(.4,0,.2,1);transform:{{ trackTransform }}">
+            <!-- Slide 1 -->
+            <div class="pricing-slide">
+              <sc-for list="{{ plansSlide0 }}" as="pl" hint-placeholder-count="3">
+                <div class="{{ pl.cardCls }}">
+                  <span class="{{ pl.badgeCls }}">{{ pl.badge }}</span>
+                  <h3 style="font-family:'Cormorant',serif;font-weight:600;font-size:28px;margin:0 0 6px;color:#2e3d35;line-height:1.1">{{ pl.name }}</h3>
+                  <p style="font-size:13px;color:rgba(46,61,53,.6);margin:0 0 18px;line-height:1.5">{{ pl.subtitle }}</p>
+                  <div style="height:1px;background:rgba(46,61,53,.08);margin-bottom:16px"></div>
+                  <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px;flex:1">
+                    <sc-for list="{{ pl.features }}" as="ft" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:flex-start;gap:9px;font-size:14px;color:#2e3d35">
+                        <span style="color:#7aab8f;font-weight:700;flex-shrink:0;margin-top:1px">✓</span>
+                        <span>{{ ft }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+                    <sc-for list="{{ pl.timingChips }}" as="chip" hint-placeholder-count="2">
+                      <span class="plan-chip"><sc-if value="{{ chip.isTime }}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></sc-if><sc-if value="{{ chip.isRevise }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 3v6h-6"></path></svg></sc-if><sc-if value="{{ chip.isScope }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M12 3l9 5-9 5-9-5 9-5z"></path><path d="M3 13l9 5 9-5"></path></svg></sc-if>{{ chip.label }}</span>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ pl.hasOldPrice }}" hint-placeholder-val="{{ false }}">
+                    <div class="plan-oldprice">{{ pl.oldPrice }}</div>
+                  </sc-if>
+                  <div class="{{ pl.priceCls }}">{{ pl.price }}</div>
+                  <button onClick="{{ pl.choose }}" class="{{ pl.btnCls }}">{{ pl.btnLabel }}</button>
+                </div>
+              </sc-for>
+            </div>
+            <!-- Slide 2 -->
+            <div class="pricing-slide">
+              <sc-for list="{{ plansSlide1 }}" as="pl" hint-placeholder-count="3">
+                <div class="{{ pl.cardCls }}">
+                  <span class="{{ pl.badgeCls }}">{{ pl.badge }}</span>
+                  <h3 style="font-family:'Cormorant',serif;font-weight:600;font-size:28px;margin:0 0 6px;color:#2e3d35;line-height:1.1">{{ pl.name }}</h3>
+                  <p style="font-size:13px;color:rgba(46,61,53,.6);margin:0 0 18px;line-height:1.5">{{ pl.subtitle }}</p>
+                  <div style="height:1px;background:rgba(46,61,53,.08);margin-bottom:16px"></div>
+                  <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px;flex:1">
+                    <sc-for list="{{ pl.features }}" as="ft" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:flex-start;gap:9px;font-size:14px;color:#2e3d35">
+                        <span style="color:#7aab8f;font-weight:700;flex-shrink:0;margin-top:1px">✓</span>
+                        <span>{{ ft }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+                    <sc-for list="{{ pl.timingChips }}" as="chip" hint-placeholder-count="2">
+                      <span class="plan-chip"><sc-if value="{{ chip.isTime }}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></sc-if><sc-if value="{{ chip.isRevise }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 3v6h-6"></path></svg></sc-if><sc-if value="{{ chip.isScope }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M12 3l9 5-9 5-9-5 9-5z"></path><path d="M3 13l9 5 9-5"></path></svg></sc-if>{{ chip.label }}</span>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ pl.hasOldPrice }}" hint-placeholder-val="{{ false }}">
+                    <div class="plan-oldprice">{{ pl.oldPrice }}</div>
+                  </sc-if>
+                  <div class="{{ pl.priceCls }}">{{ pl.price }}</div>
+                  <button onClick="{{ pl.choose }}" class="{{ pl.btnCls }}">{{ pl.btnLabel }}</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <!-- Prev / Next arrows — subtle -->
+        <button onClick="{{ pricingPrev }}" style="position:absolute;left:-18px;top:calc(50% + 28px);transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:#fff;border:1.5px solid rgba(46,61,53,.1);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;color:#2e3d35;box-shadow:0 4px 14px rgba(46,61,53,.08);transition:all .2s" style-hover="border-color:#d4717e;color:#d4717e">‹</button>
+        <button onClick="{{ pricingNext }}" style="position:absolute;right:-18px;top:calc(50% + 28px);transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:#fff;border:1.5px solid rgba(46,61,53,.1);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;color:#2e3d35;box-shadow:0 4px 14px rgba(46,61,53,.08);transition:all .2s" style-hover="border-color:#d4717e;color:#d4717e">›</button>
+      </div>
+
+      <div id="request-form" style="max-width:680px;margin:0 auto;background:#fff;border:1px solid rgba(46,61,53,.07);border-radius:28px;padding:clamp(30px,4vw,48px);scroll-margin-top:100px">
+        <sc-if value="{{ projSent }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:30px 0;animation:pop .4s ease both">
+            <div style="width:78px;height:78px;border-radius:50%;background:#7aab8f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 22px">✓</div>
+            <h2 style="font-family:'Cormorant',serif;font-weight:600;font-size:34px;margin:0 0 12px">Заявка отправлена</h2>
+            <p style="font-size:17px;color:rgba(46,61,53,.7);max-width:400px;margin:0 auto 26px">Спасибо! Я свяжусь с вами в течение дня в удобном мессенджере и уточню детали проекта.</p>
+            <button onClick="{{ resetProj }}" class="btn-sec" style="background:transparent;color:#2e3d35;border:1.5px solid #7aab8f;padding:13px 26px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer">Отправить ещё одну</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ projForm }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <h2 style="font-family:'Cormorant',serif;font-weight:600;font-size:clamp(30px,4vw,40px);margin:0 0 8px">Оставить заявку</h2>
+            <p style="font-size:16px;color:rgba(46,61,53,.7);margin:0 0 12px">Выбран тариф:<br><strong style="color:#d4717e">{{ selectedPlanLabel }}</strong></p>
+            <form onSubmit="{{ submitProj }}" style="display:flex;flex-direction:column;gap:18px;margin-top:18px">
+              <label style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600">Ваше имя
+                <input value="{{ proj.name }}" onChange="{{ onProjName }}" placeholder="Как к вам обращаться" style="border:1.5px solid rgba(46,61,53,.16);background:#faf6f2;border-radius:14px;padding:15px 18px;font-size:16px;color:#2e3d35;font-weight:400;outline:none;transition:border .2s" style-focus="border-color:#d4717e">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600">Контакт
+                <input value="{{ proj.contact }}" onChange="{{ onProjContact }}" placeholder="Телефон, Telegram или почта" style="border:1.5px solid rgba(46,61,53,.16);background:#faf6f2;border-radius:14px;padding:15px 18px;font-size:16px;color:#2e3d35;font-weight:400;outline:none;transition:border .2s" style-focus="border-color:#d4717e">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600">Описание задачи
+                <textarea value="{{ proj.task }}" onChange="{{ onProjTask }}" placeholder="Расскажите о бизнесе и о том, что нужно сделать" rows="4" style="border:1.5px solid rgba(46,61,53,.16);background:#faf6f2;border-radius:14px;padding:15px 18px;font-size:16px;color:#2e3d35;font-weight:400;outline:none;resize:vertical;transition:border .2s;font-family:inherit" style-focus="border-color:#d4717e"></textarea>
+              </label>
+              <sc-if value="{{ projError }}" hint-placeholder-val="{{ false }}">
+                <span style="color:#c25e6b;font-size:14px;font-weight:600">Заполните имя и контакт, пожалуйста.</span>
+              </sc-if>
+              <button type="submit" style="background:#d4717e;color:#fff;border:none;padding:17px;border-radius:16px;font-size:17px;font-weight:600;cursor:pointer;transition:all .25s ease;box-shadow:0 10px 26px rgba(212,113,126,.3)" style-hover="background:#c25e6b">Отправить заявку</button>
+              <p style="font-size:13px;color:rgba(46,61,53,.5);text-align:center;margin:0">Заявка придёт в Telegram. Нажимая кнопку, вы соглашаетесь на обработку данных.</p>
+            </form>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ===================== REVIEWS ===================== -->
+    <sc-if value="{{ isReviews }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Отзывы" class="sec-x" style="max-width:1200px;margin:0 auto;padding:60px 28px 80px">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:40px">
+        <div>
+          <span style="font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#7aab8f;font-weight:700">Клиенты</span>
+          <h1 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(40px,5vw,60px);margin:10px 0 0">Отзывы</h1>
+        </div>
+        <button onClick="{{ openReview }}" style="background:#d4717e;color:#fff;border:none;padding:15px 28px;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;transition:all .25s ease;box-shadow:0 10px 26px rgba(212,113,126,.28)" style-hover="background:#c25e6b;transform:translateY(-2px)">Оставить отзыв</button>
+      </div>
+      <div style="columns:3 300px;column-gap:24px">
+        <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="4">
+          <div style="break-inside:avoid;margin-bottom:24px;background:#fff;border:1px solid rgba(46,61,53,.06);border-radius:20px;padding:28px;animation:pop .4s ease both">
+            <div style="color:#d4717e;font-size:17px;letter-spacing:3px;margin-bottom:14px">{{ r.stars }}</div>
+            <p style="font-family:'Cormorant',serif;font-style:italic;font-size:20px;line-height:1.42;margin:0 0 20px;color:#2e3d35">«{{ r.text }}»</p>
+            <div style="display:flex;align-items:center;gap:12px;border-top:1px solid rgba(46,61,53,.08);padding-top:18px">
+              <span style="width:42px;height:42px;border-radius:50%;background:#f2c4ce;color:#a23f4d;display:flex;align-items:center;justify-content:center;font-family:'Cormorant',serif;font-size:20px;font-weight:600;flex-shrink:0">{{ r.initial }}</span>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:15px">{{ r.name }}</div>
+                <div style="font-size:13px;color:#7aab8f;font-weight:600">{{ r.service }} · {{ r.date }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ===================== ABOUT ===================== -->
+    <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="О себе" class="sec-x" style="max-width:1200px;margin:0 auto;padding:60px 28px 80px">
+
+      <!-- Hero row: text left, photo right — mirrors the home page layout -->
+      <section style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:64px">
+        <div>
+          <div style="font-size:15px;font-weight:700;letter-spacing:2px;color:#7aab8f;margin-bottom:16px;text-transform:uppercase">О себе</div>
+          <h1 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(38px,4.5vw,58px);line-height:1.06;margin:0 0 28px;letter-spacing:-.3px">Привет, я Екатерина</h1>
+          <div style="font-size:17px;color:rgba(46,61,53,.78);line-height:1.75;display:flex;flex-direction:column;gap:16px">
+            <p style="margin:0">Мне 25, и больше двух лет я создаю айдентику для малого бизнеса и экспертов: логотипы, фирменный стиль и визуал, который понимает аудиторию клиента.</p>
+            <p style="margin:0">Графические редакторы я знаю до мелочей. О кнопках почти не думаю, всё внимание уходит на саму задачу. То, на что у многих уходит целый день, я собираю за пару часов. Скорость освобождает время на главное&nbsp;— на идею.</p>
+            <p style="margin:0">Вкус у меня гибкий. Я подстраиваю стиль под каждого клиента: кому-то нужна строгость, кому-то воздух и игра. Слушаю и ловлю то, что человек хочет, но пока не может назвать словами. Часто именно это решает, оживёт проект или останется папкой файлов.</p>
+            <p style="margin:0">И я не стою на месте. Беру новые инструменты и подходы, если они делают работу лучше или быстрее, и сразу пускаю в дело.</p>
+          </div>
+
+          <!-- Social pills -->
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:32px">
+            <a href="https://t.me/matrenkinodsgn" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid rgba(46,61,53,.1);border-radius:999px;padding:10px 20px;text-decoration:none;color:#2e3d35;font-size:14px;font-weight:600;transition:all .25s ease" style-hover="border-color:#d4717e;color:#d4717e;transform:translateY(-2px)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              Telegram
+            </a>
+            <a href="https://vk.com/matrenkino_dsgn" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid rgba(46,61,53,.1);border-radius:999px;padding:10px 20px;text-decoration:none;color:#2e3d35;font-size:14px;font-weight:600;transition:all .25s ease" style-hover="border-color:#d4717e;color:#d4717e;transform:translateY(-2px)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.579 6.855c.14-.465 0-.806-.662-.806h-2.193c-.558 0-.813.295-.953.619 0 0-1.115 2.719-2.695 4.482-.51.513-.743.675-1.021.675-.139 0-.341-.162-.341-.627V6.855c0-.558-.161-.806-.626-.806H9.642c-.348 0-.558.258-.558.504 0 .528.79.65.871 2.138v3.228c0 .707-.127.836-.407.836-.743 0-2.55-2.731-3.621-5.858-.209-.606-.42-.852-.98-.852H2.754c-.627 0-.752.295-.752.619 0 .581.743 3.462 3.461 7.271 1.812 2.601 4.363 4.011 6.687 4.011 1.393 0 1.565-.313 1.565-.853v-1.966c0-.626.133-.751.574-.751.325 0 .882.163 2.183 1.42 1.486 1.486 1.731 2.15 2.567 2.15h2.193c.626 0 .939-.313.759-.931-.197-.615-.907-1.51-1.849-2.569-.511-.604-1.277-1.254-1.51-1.579-.325-.418-.231-.604 0-.976.001 0 2.672-3.761 2.947-5.037z"></path></svg>
+              ВКонтакте
+            </a>
+            <a href="https://www.instagram.com/matrenkino/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid rgba(46,61,53,.1);border-radius:999px;padding:10px 20px;text-decoration:none;color:#2e3d35;font-size:14px;font-weight:600;transition:all .25s ease" style-hover="border-color:#d4717e;color:#d4717e;transform:translateY(-2px)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              Instagram
+            </a>
+          </div>
+        </div>
+
+        <!-- Photo — no tint, clean card like home page -->
+        <div style="aspect-ratio:4/5;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(46,61,53,.14)">
+          <img src="images/photo2.jpg" alt="Екатерина Булатова — рабочее место" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block">
+        </div>
+      </section>
+
+      <!-- CTA block matching home page -->
+      <div style="background:linear-gradient(135deg,#34463c 0%,#2e3d35 50%,#243029 100%);border-radius:28px;padding:clamp(34px,5vw,56px);text-align:center;color:#faf6f2;position:relative;overflow:hidden;isolation:isolate;transform:translateZ(0)">
+        <div style="position:absolute;top:-80px;left:-60px;width:360px;height:360px;border-radius:50%;background:#d4717e;opacity:.7;filter:blur(60px)"></div>
+        <div style="position:absolute;bottom:-90px;right:-50px;width:360px;height:360px;border-radius:50%;background:#7aab8f;opacity:.75;filter:blur(60px)"></div>
+        <div style="position:absolute;top:40%;left:50%;width:280px;height:280px;border-radius:50%;background:#e8a5b8;opacity:.32;filter:blur(70px);transform:translate(-50%,-30%)"></div>
+        <div style="position:relative">
+          <h2 style="font-family:'Cormorant',serif;font-weight:500;font-size:clamp(38px,4.5vw,54px);margin:0 0 14px">Начнём ваш проект?</h2>
+          <p style="font-size:17px;color:rgba(250,246,242,.78);max-width:460px;margin:0 auto 28px">Опишите задачу&nbsp;— отвечу с предложением по составу, срокам и цене.</p>
+          <button onClick="{{ goPricing }}" style="background:#d4717e;color:#fff;border:none;padding:16px 34px;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;transition:all .25s ease;box-shadow:0 12px 30px rgba(212,113,126,.4)" style-hover="background:#c25e6b;transform:translateY(-2px)">Оставить заявку</button>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ===================== PROJECT MODAL ===================== -->
+  <sc-if value="{{ hasProject }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:80;background:rgba(46,61,53,.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px" onClick="{{ closeProject }}">
+      <div onClick="{{ stop }}" style="width:100%;max-width:1200px;max-height:92vh;background:#faf6f2;border-radius:24px;overflow:hidden;box-shadow:0 40px 100px rgba(46,61,53,.4);animation:pop .35s ease both;display:flex;flex-direction:column">
+
+        <!-- Photo slider — dominant -->
+        <div id="proj-modal-hero" style="position:relative;height:56vh;min-height:300px;overflow:hidden;flex-shrink:0">
+          <div id="proj-photo-track" style="display:flex;width:100%;height:100%;transition:transform .38s cubic-bezier(.4,0,.2,1)">
+            <sc-for list="{{ projModalPhotos }}" as="photo" hint-placeholder-count="3">
+              <div style="flex-shrink:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f2c4ce">
+                <span style="font-family:monospace;font-size:13px;letter-spacing:1px;background:rgba(250,246,242,.88);color:#a23f4d;padding:8px 18px;border-radius:999px;font-weight:600">{{ photo.ph }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <button onClick="{{ projPrev }}" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(250,246,242,.88);color:#2e3d35;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(46,61,53,.16);transition:all .2s" style-hover="background:#fff">‹</button>
+          <button onClick="{{ projNext }}" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(250,246,242,.88);color:#2e3d35;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(46,61,53,.16);transition:all .2s" style-hover="background:#fff">›</button>
+          <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:7px;align-items:center">
+            <sc-for list="{{ projPhotoDots }}" as="dot" hint-placeholder-count="3">
+              <button onClick="{{ dot.onClick }}" class="proj-photo-dot {{ dot.cls }}"></button>
+            </sc-for>
+          </div>
+          <button onClick="{{ closeProject }}" style="position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:none;background:rgba(250,246,242,.88);color:#2e3d35;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;z-index:2;transition:all .2s" style-hover="background:#fff">×</button>
+        </div>
+
+        <!-- Info row -->
+        <div class="modal-info" style="flex-grow:1;overflow-y:auto;padding:28px 36px 32px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch">
+          <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px;margin-bottom:4px">
+            <span style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#7aab8f;font-weight:700">{{ projModalCategory }}</span>
+            <h2 style="font-family:'Cormorant',serif;font-weight:600;font-size:clamp(20px,2.2vw,26px);margin:0;color:#2e3d35;line-height:1.15">{{ projModalTitle }}</h2>
+          </div>
+          <div style="background:#fff;border-radius:16px;padding:20px 22px;border:1px solid rgba(46,61,53,.06)">
+            <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#d4717e;font-weight:700;margin-bottom:8px">Задача</div>
+            <p style="font-size:14px;color:rgba(46,61,53,.8);margin:0;line-height:1.7">{{ projModalTask }}</p>
+          </div>
+          <div style="background:#f2c4ce;border-radius:16px;padding:20px 22px">
+            <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#a23f4d;font-weight:700;margin-bottom:8px">Результат</div>
+            <p style="font-size:14px;color:#2e3d35;margin:0;line-height:1.7">{{ projModalResult }}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================== REVIEW MODAL ===================== -->
+  <sc-if value="{{ reviewOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:80;background:rgba(46,61,53,.5);backdrop-filter:blur(6px);display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto" onClick="{{ closeReview }}">
+      <div onClick="{{ stop }}" style="width:100%;max-width:540px;background:#faf6f2;border-radius:28px;padding:clamp(28px,4vw,44px);animation:pop .35s ease both;box-shadow:0 30px 80px rgba(46,61,53,.3)">
+        <sc-if value="{{ revSent }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:20px 0">
+            <div style="width:74px;height:74px;border-radius:50%;background:#7aab8f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 20px">✓</div>
+            <h2 style="font-family:'Cormorant',serif;font-weight:600;font-size:32px;margin:0 0 12px">Спасибо за отзыв!</h2>
+            <p style="font-size:16px;color:rgba(46,61,53,.7);margin:0 0 24px">Он отправлен на модерацию и скоро появится на странице.</p>
+            <button onClick="{{ closeReview }}" style="background:#d4717e;color:#fff;border:none;padding:14px 28px;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer">Закрыть</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ revForm }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px">
+              <h2 style="font-family:'Cormorant',serif;font-weight:600;font-size:32px;margin:0">Оставить отзыв</h2>
+              <button onClick="{{ closeReview }}" style="width:38px;height:38px;border-radius:50%;border:none;background:#f2c4ce;color:#a23f4d;font-size:20px;cursor:pointer;line-height:1">×</button>
+            </div>
+            <form onSubmit="{{ submitReview }}" style="display:flex;flex-direction:column;gap:18px">
+              <label style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600">Ваше имя
+                <input value="{{ rev.name }}" onChange="{{ onRevName }}" placeholder="Имя" style="border:1.5px solid rgba(46,61,53,.16);background:#fff;border-radius:14px;padding:14px 16px;font-size:16px;color:#2e3d35;font-weight:400;outline:none" style-focus="border-color:#d4717e">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600">Услуга
+                <select value="{{ rev.service }}" onChange="{{ onRevService }}" style="border:1.5px solid rgba(46,61,53,.16);background:#fff;border-radius:14px;padding:14px 16px;font-size:16px;color:#2e3d35;font-weight:400;outline:none;cursor:pointer">
+                  <sc-for list="{{ services }}" as="sv" hint-placeholder-count="4">
+                    <option value="{{ sv }}">{{ sv }}</option>
+                  </sc-for>
+                </select>
+              </label>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:14px;font-weight:600">Оценка</span>
+                <div style="display:flex;gap:6px">
+                  <sc-for list="{{ ratingStars }}" as="st" hint-placeholder-count="5">
+                    <span onClick="{{ st.set }}" style="{{ st.style }}">★</span>
+                  </sc-for>
+                </div>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600">Текст отзыва
+                <textarea value="{{ rev.text }}" onChange="{{ onRevText }}" placeholder="Поделитесь впечатлением о работе" rows="4" style="border:1.5px solid rgba(46,61,53,.16);background:#fff;border-radius:14px;padding:14px 16px;font-size:16px;color:#2e3d35;font-weight:400;outline:none;resize:vertical;font-family:inherit" style-focus="border-color:#d4717e"></textarea>
+              </label>
+              <sc-if value="{{ revError }}" hint-placeholder-val="{{ false }}">
+                <span style="color:#c25e6b;font-size:14px;font-weight:600">Заполните имя и текст отзыва.</span>
+              </sc-if>
+              <button type="submit" style="background:#d4717e;color:#fff;border:none;padding:16px;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;transition:all .25s ease" style-hover="background:#c25e6b">Отправить отзыв</button>
+            </form>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer style="position:relative;z-index:1;background:#f2c4ce;margin-top:40px">
+    <div class="footer-grid sec-x" style="max-width:1200px;margin:0 auto;padding:54px 28px 40px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;align-items:start">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" style="width:54px;height:54px;flex-shrink:0"><path fill="#faf6f2" d="M702.47,829.5c0-83.88-30.4-158.56-77.69-206.57,26.05-29.41,41.89-68.07,41.89-110.44,0-92.05-74.62-166.67-166.67-166.67s-166.67,74.62-166.67,166.67c0,42.38,15.84,81.03,41.89,110.44-47.3,48.01-77.69,122.69-77.69,206.57,0,51.68,11.55,99.87,31.47,140.48-56.97-20.73-109.11-51.53-154.26-90.24,87.44,74.96,201.06,120.25,325.26,120.25s237.82-45.29,325.26-120.25c-45.15,38.71-97.29,69.5-154.26,90.24,19.92-40.61,31.47-88.8,31.47-140.48ZM615.94,740.06c8.8,0,15.94,7.14,15.94,15.94s-7.14,15.94-15.94,15.94-15.94-7.14-15.94-15.94,7.14-15.94,15.94-15.94ZM372.96,917.1c-14.93,0-27.04-12.11-27.04-27.04s12.11-27.04,27.04-27.04,27.04,12.11,27.04,27.04-12.11,27.04-27.04,27.04ZM384.06,771.94c-8.8,0-15.94-7.14-15.94-15.94s7.14-15.94,15.94-15.94,15.94,7.14,15.94,15.94-7.14,15.94-15.94,15.94ZM500,927.74c-8.8,0-15.94-7.14-15.94-15.94s7.14-15.94,15.94-15.94,15.94,7.14,15.94,15.94-7.14,15.94-15.94,15.94ZM500,798.98c-14.93,0-27.04-12.11-27.04-27.04s12.11-27.04,27.04-27.04,27.04,12.11,27.04,27.04-12.11,27.04-27.04,27.04ZM500,615.29c-56.21,0-101.78-45.57-101.78-101.78s45.57-101.78,101.78-101.78,101.78,45.57,101.78,101.78-45.57,101.78-101.78,101.78ZM627.04,917.1c-14.93,0-27.04-12.11-27.04-27.04s12.11-27.04,27.04-27.04,27.04,12.11,27.04,27.04-12.11,27.04-27.04,27.04Z"></path><path fill="#d4717e" d="M859.34,847.65c.07-.08.15-.15.22-.23,4.25-4.4,8.42-8.87,12.5-13.42.11-.12.22-.24.33-.37,4.07-4.53,8.05-9.14,11.95-13.83.1-.12.19-.23.29-.35,1.95-2.35,3.89-4.72,5.8-7.1.03-.04.06-.08.09-.12,1.92-2.4,3.82-4.81,5.69-7.24.03-.03.05-.07.08-.1,1.85-2.4,3.67-4.82,5.48-7.25.14-.18.27-.37.41-.55,3.56-4.81,7.03-9.68,10.42-14.62.18-.26.35-.52.53-.78,3.35-4.9,6.61-9.86,9.78-14.88.17-.28.35-.55.53-.83,1.58-2.51,3.14-5.03,4.67-7.57.07-.12.14-.23.21-.35,1.49-2.46,2.95-4.94,4.4-7.43.13-.23.27-.46.4-.69,1.47-2.54,2.91-5.09,4.34-7.65.17-.3.33-.59.49-.89,1.39-2.52,2.77-5.05,4.12-7.6.04-.08.08-.15.12-.23,1.37-2.59,2.72-5.2,4.04-7.81.2-.39.4-.79.6-1.18,2.62-5.2,5.15-10.46,7.59-15.76.2-.43.4-.86.6-1.3,1.21-2.64,2.39-5.29,3.55-7.95.08-.18.16-.36.23-.54,1.1-2.53,2.17-5.06,3.23-7.61.17-.41.34-.81.51-1.22,1.09-2.65,2.16-5.31,3.21-7.99.16-.4.31-.8.46-1.19.97-2.5,1.93-5.01,2.86-7.53.11-.3.22-.59.33-.89.99-2.69,1.95-5.39,2.9-8.1.18-.51.35-1.02.53-1.53.94-2.72,1.86-5.44,2.75-8.17,0-.02.01-.04.02-.07.9-2.76,1.76-5.53,2.61-8.3.17-.56.34-1.11.51-1.67.83-2.75,1.65-5.52,2.43-8.29.06-.21.12-.42.17-.63.74-2.61,1.45-5.24,2.14-7.87.14-.54.29-1.09.43-1.63.72-2.76,1.42-5.52,2.09-8.3.11-.46.22-.91.33-1.37.6-2.52,1.19-5.05,1.75-7.59.1-.46.21-.92.31-1.38.61-2.79,1.2-5.58,1.76-8.39.12-.58.23-1.17.35-1.75.53-2.65,1.03-5.31,1.52-7.98.04-.25.09-.5.14-.75.51-2.84.99-5.69,1.45-8.55.1-.64.21-1.28.31-1.92.45-2.87.89-5.75,1.29-8.64.02-.15.04-.3.06-.45.38-2.77.74-5.55,1.08-8.34.08-.64.16-1.27.23-1.91.34-2.86.65-5.74.94-8.62.05-.46.09-.92.13-1.38.25-2.6.48-5.2.7-7.81.05-.57.1-1.14.14-1.7.23-2.88.43-5.78.6-8.67.04-.61.07-1.22.11-1.84.15-2.65.29-5.31.4-7.98.02-.4.04-.79.05-1.19.11-2.93.2-5.87.26-8.81.01-.68.03-1.36.04-2.04.05-3,.09-6,.09-9C1000,223.86,776.14,0,500,0S0,223.86,0,500c0,3.01.04,6.01.09,9,.01.68.02,1.36.04,2.04.06,2.94.15,5.88.26,8.81.02.4.04.8.05,1.19.11,2.67.24,5.33.4,7.98.03.61.07,1.22.1,1.84.18,2.9.38,5.79.6,8.67.04.57.09,1.14.14,1.7.21,2.61.44,5.21.7,7.81.04.46.09.92.13,1.38.29,2.88.6,5.75.94,8.62.08.64.15,1.28.23,1.91.34,2.79.69,5.57,1.08,8.34.02.15.04.3.06.45.4,2.89.84,5.77,1.29,8.64.1.64.2,1.28.31,1.92.46,2.86.94,5.71,1.45,8.55.04.25.09.5.14.75.48,2.67.99,5.33,1.52,7.98.12.58.23,1.17.35,1.75.57,2.8,1.15,5.6,1.76,8.39.1.46.21.92.31,1.38.56,2.54,1.15,5.07,1.75,7.59.11.46.21.91.33,1.37.67,2.78,1.37,5.54,2.09,8.3.14.55.29,1.09.43,1.63.69,2.63,1.41,5.26,2.14,7.87.06.21.11.42.17.63.79,2.77,1.6,5.54,2.43,8.29.17.56.34,1.11.51,1.67.85,2.78,1.72,5.55,2.61,8.3,0,.02.01.04.02.07.89,2.74,1.81,5.46,2.75,8.17.18.51.35,1.02.53,1.53.94,2.71,1.91,5.41,2.9,8.1.11.3.22.59.33.89.93,2.52,1.89,5.03,2.86,7.53.15.4.31.8.46,1.19,1.05,2.67,2.12,5.34,3.21,7.99.17.41.34.81.51,1.22,1.06,2.55,2.13,5.08,3.23,7.61.08.18.16.36.23.54,1.16,2.66,2.35,5.31,3.55,7.95.2.43.4.86.6,1.3,2.44,5.3,4.97,10.56,7.59,15.76.2.4.4.79.6,1.18,1.33,2.62,2.67,5.22,4.04,7.81.04.08.08.15.12.23,1.35,2.55,2.72,5.08,4.12,7.6.16.3.33.6.49.89,1.42,2.56,2.87,5.12,4.34,7.65.13.23.27.46.4.69,1.45,2.49,2.91,4.97,4.4,7.43.07.12.14.23.21.35,1.54,2.54,3.1,5.06,4.67,7.57.17.28.35.55.53.83,3.17,5.02,6.43,9.98,9.78,14.88.18.26.35.52.53.78,3.39,4.94,6.86,9.81,10.42,14.62.14.18.27.37.41.55,1.81,2.43,3.63,4.85,5.48,7.25.03.03.05.07.08.1,1.88,2.43,3.77,4.85,5.69,7.24.03.04.06.08.09.12,1.91,2.39,3.84,4.75,5.8,7.1.1.12.19.23.29.35,3.9,4.68,7.88,9.29,11.95,13.83.11.12.22.24.33.37,4.09,4.55,8.26,9.02,12.5,13.42.07.08.15.15.22.23,10.84,11.2,22.2,21.9,34.05,32.06.01.01.03.02.04.03,45.15,38.71,97.29,69.5,154.26,90.24-19.92-40.61-31.47-88.8-31.47-140.48,0-83.88,30.4-158.56,77.69-206.57-26.05-29.41-41.89-68.07-41.89-110.44,0-92.05,74.62-166.67,166.67-166.67s166.67,74.62,166.67,166.67c0,42.38-15.84,81.03-41.89,110.44,47.3,48.01,77.69,122.69,77.69,206.57,0,51.68-11.55,99.87-31.47,140.48,56.97-20.73,109.11-51.53,154.26-90.24.01-.01.03-.02.04-.03,11.84-10.15,23.2-20.85,34.05-32.06ZM566.67,204.03c-1.71,21.93-18.27,48.99-66.67,82.93-48.4-33.94-64.95-61-66.66-82.93v-7.63c1.84-22.92,16.94-34.88,30-36.15,2.15-.21,4.15-.31,6.04-.31,15.09,0,22.33,6.52,30.62,16.4,8.29-9.88,15.53-16.4,30.62-16.4,1.88,0,3.89.1,6.04.31,13.06,1.28,28.17,13.23,30.01,36.15v7.63Z"></path><path fill="#faf6f2" d="M536.66,160.25c-2.15-.21-4.15-.31-6.04-.31-15.09,0-22.33,6.52-30.62,16.4-8.29-9.88-15.53-16.4-30.62-16.4-1.88,0-3.89.1-6.04.31-13.06,1.28-28.17,13.23-30,36.15v7.63c1.71,21.93,18.27,48.99,66.66,82.93,48.39-33.94,64.95-61,66.67-82.93v-7.63c-1.84-22.92-16.95-34.88-30.01-36.15Z"></path><circle fill="#2e3d35" cx="500" cy="771.94" r="27.04"></circle><circle fill="#d4717e" cx="500" cy="513.51" r="101.78"></circle><path fill="#2e3d35" d="M372.96,863.02c-14.93,0-27.04,12.11-27.04,27.04s12.11,27.04,27.04,27.04,27.04-12.11,27.04-27.04-12.11-27.04-27.04-27.04Z"></path><path fill="#2e3d35" d="M627.04,863.02c-14.93,0-27.04,12.11-27.04,27.04s12.11,27.04,27.04,27.04,27.04-12.11,27.04-27.04-12.11-27.04-27.04-27.04Z"></path><circle fill="#d4717e" cx="615.94" cy="756" r="15.94"></circle><circle fill="#d4717e" cx="384.06" cy="756" r="15.94"></circle><circle fill="#d4717e" cx="500" cy="911.8" r="15.94"></circle></svg>
+          <span style="font-family:'Cormorant',serif;font-size:22px;font-weight:600">Екатерина Булатова</span>
+        </div>
+        <p style="font-size:15px;color:#7c4750;max-width:300px;margin:0">Графический дизайн, айдентика и брендинг для тех, кому важно выделяться.</p>
+      </div>
+      <div>
+        <div style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#a23f4d;font-weight:700;margin-bottom:16px">Навигация</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+            <a onClick="{{ item.onClick }}" style="font-size:15px;color:#2e3d35;cursor:pointer;text-decoration:none;width:fit-content" style-hover="color:#d4717e">{{ item.label }}</a>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#a23f4d;font-weight:700;margin-bottom:16px">Контакты</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ socials }}" as="c" hint-placeholder-count="3">
+            <a href="{{ c.href }}" target="_blank" style="font-size:15px;color:#2e3d35;text-decoration:none;width:fit-content" style-hover="color:#d4717e">{{ c.value }}</a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(124,71,80,.2)">
+      <div class="sec-x" style="max-width:1200px;margin:0 auto;padding:22px 28px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;font-size:13px;color:#7c4750">
+        <span>© {{ year }} Булатова Екатерина Дмитриевна. Все права защищены.</span>
+        <span>Сделано с любовью к деталям</span>
+      </div>
+    </div>
+  </footer>
+
+</main></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    page: 'home',
+    activeProject: null,
+    projectSlide: 0,
+    pricingSlide: 0,
+    reviewSlide: 0,
+    mobileOpen: false,
+    filter: 'Все',
+    selectedPlan: 'Узнаваемый старт',
+    planChosen: false,
+    proj: { name: '', contact: '', task: '' },
+    projSent: false,
+    projError: false,
+    reviewOpen: false,
+    revSent: false,
+    revError: false,
+    rev: { name: '', service: 'Экспресс', text: '', rating: 5 },
+    reviews: [
+      { name: 'Мария Соколова', service: 'Фирменный стиль', date: 'Май 2026', rating: 5, text: 'Екатерина вникла в суть бизнеса лучше меня самой. Логотип и стиль попали точно в цель — клиенты стали говорить, что бренд «дорогой и тёплый».' },
+      { name: 'Дмитрий Орлов', service: 'Логотип', date: 'Апрель 2026', rating: 5, text: 'Делали логотип для кофейни. Два внятных направления вместо сотни случайных вариантов — сразу было понятно, что выбираем и почему.' },
+      { name: 'Анна Лис', service: 'Соцсети', date: 'Март 2026', rating: 5, text: 'Шаблоны для соцсетей сэкономили мне кучу времени. Профиль наконец-то выглядит цельно, а не как лоскутное одеяло.' },
+      { name: 'Ольга Венедиктова', service: 'Брендинг под ключ', date: 'Февраль 2026', rating: 5, text: 'Полный брендинг студии керамики. Спокойно, по этапам, всё в срок. Получила не файлы, а понятную систему, которой легко пользоваться.' },
+      { name: 'Игорь П.', service: 'Визитки', date: 'Январь 2026', rating: 5, text: 'Визитки, которые не хочется выбрасывать. Люди реально оставляют их у себя. Спасибо за внимание к мелочам.' }
+    ]
+  };
+
+  tags = ['Логотипы', 'Фирменный стиль', 'Айдентика', 'Брендинг'];
+  statsData = [
+    { num: '2+',  label: 'года в дизайне',           bg: '#fff',    numColor: '#d4717e',            labelColor: 'rgba(46,61,53,.72)', shadow: '0 14px 40px rgba(212,113,126,.16)' },
+    { num: '50+', label: 'проектов завершено',        bg: '#f2c4ce', numColor: '#a23f4d',            labelColor: 'rgba(46,61,53,.72)', shadow: '0 14px 40px rgba(162,63,77,.14)'  },
+    { num: '80%', label: 'клиентов возвращаются',     bg: '#7aab8f', numColor: '#fff',               labelColor: 'rgba(255,255,255,.85)', shadow: '0 14px 40px rgba(122,171,143,.28)' }
+  ];
+  advantagesData = [
+    { n: '01', title: 'Сначала — вопросы, потом — дизайн', text: 'До первого эскиза я узнаю, кто покупает у вас и где айдентика появится чаще всего: вывеска, соцсети, упаковка. Один созвон на старте экономит три круга правок потом.' },
+    { n: '02', title: 'Объясняю каждое решение', text: 'К каждому варианту я прикладываю объяснение: почему этот шрифт, почему такие цвета, как это соотносится с вашей аудиторией. Вы можете поспорить с логикой. Тогда правки идут быстро, потому что понятно, что именно и зачем менять.' },
+    { n: '03', title: 'Веду проект лично', text: 'Бриф слушаю я, эскизы делаю я, финальные файлы сдаю я. То, что вы сказали на первом созвоне, я помню при сдаче.' },
+    { n: '04', title: 'Говорю честно, даже если неудобно', text: 'Если идея не сработает — скажу до старта, а не после трёх итераций. Иногда это неудобный разговор. Переделывать готовую работу дольше.' },
+    { n: '05', title: 'Файлы, которые можно сразу использовать', text: 'В конце проекта вы получаете папку: логотип в AI, PDF и PNG с прозрачным фоном, цвета в CMYK и RGB. Типография откроет без вопросов. Вебмастер разберётся без звонка.' },
+    { n: '06', title: 'Называю дату — держу её', text: 'В начале я называю дату сдачи. Если что-то изменится с моей стороны — предупрежу заранее, не в день дедлайна. Дедлайны чаще всего съезжают по одной причине: исполнитель молчит до последнего.' }
+  ];
+  processData = [
+    { n: '01', phase: 'знакомство', title: 'Заявка', text: 'Оставляете контакт и коротко описываете задачу. Я откликаюсь в течение дня.', tag: 'вы делаете первый шаг', icon: 'ti-message-circle', iconBg: '#f2c4ce', iconColor: '#a23f4d', titleColor: '#3f6b54', last: false },
+    { n: '02', phase: 'разговор', title: 'Созвон 15–20 минут', text: 'Разбираемся вместе: кто ваша аудитория, что должен говорить ваш визуал, какой результат считаем успехом.', tag: 'говорим на одном языке', icon: 'ti-phone-call', iconBg: '#c9e8d8', iconColor: '#3f6b54', titleColor: '#a23f4d', last: false },
+    { n: '03', phase: 'структура', title: 'Техническое задание', text: 'В течение дня составляю ТЗ и отправляю вам. Читаете, вносите правки, согласовываем.', tag: 'никаких сюрпризов в работе', icon: 'ti-file-text', iconBg: '#f2c4ce', iconColor: '#a23f4d', titleColor: '#3f6b54', last: false },
+    { n: '04', phase: 'договорённость', title: 'Договор и предоплата', text: 'Подписываем договор, вы вносите 50% — и я приступаю к работе.', tag: 'всё прозрачно и официально', icon: 'ti-writing', iconBg: '#c9e8d8', iconColor: '#3f6b54', titleColor: '#a23f4d', last: false },
+    { n: '05', phase: 'создание', title: 'Работа и согласование', text: 'Показываю результат, обсуждаем правки если они есть.', tag: 'вы видите и влияете на процесс', icon: 'ti-palette', iconBg: '#f2c4ce', iconColor: '#a23f4d', titleColor: '#3f6b54', last: false },
+    { n: '06', phase: 'финал', title: 'Финал и оплата', text: 'Закрываем проект, вы оплачиваете оставшиеся 50% и получаете все файлы.', tag: 'результат у вас на руках', icon: 'ti-rosette-discount-check', iconBg: '#c9e8d8', iconColor: '#3f6b54', titleColor: '#a23f4d', last: true }
+  ];
+  _makePhotos(labels, bg1, bg2) {
+    return labels.map((l, i) => ({ ph: l, bg: i % 2 === 0 ? bg1 : bg2 }));
+  }
+  get projectsData() { return this._projectsDataCached || (this._projectsDataCached = this._buildProjects()); }
+  _buildProjects() {
+    const P = (bgs, n) => Array.from({length:n},(_,i)=>({ph:'фото '+(i+1)+'/'+n, bg:bgs[i%bgs.length]}));
+    const bg1='repeating-linear-gradient(135deg,#f2c4ce,#f2c4ce 16px,#f7d6dd 16px,#f7d6dd 32px)';
+    const bg2='repeating-linear-gradient(45deg,#7aab8f33,#7aab8f33 16px,#7aab8f1a 16px,#7aab8f1a 32px)';
+    const bg3='repeating-linear-gradient(45deg,#f7d6dd,#f7d6dd 14px,#faf0f3 14px,#faf0f3 28px)';
+    const bg4='repeating-linear-gradient(45deg,#c8b9a422,#c8b9a422 14px,#c8b9a411 14px,#c8b9a411 28px)';
+    const bg5='repeating-linear-gradient(45deg,#e8c97733,#e8c97733 16px,#e8c9771a 16px,#e8c9771a 32px)';
+    const bg6='repeating-linear-gradient(45deg,#2e3d3522,#2e3d3522 14px,#2e3d350f 14px,#2e3d350f 28px)';
+    return [
+    { title:'Цветочная мастерская «Флёр»', category:'Айдентика', desc:'Логотип, палитра, упаковка и носители', ph:'айдентика · «Флёр»', bg:bg1, photos:P([bg1,bg3,bg1,bg2],4), task:'Создать тёплый, женственный образ для цветочной мастерской в центре города. Заказчик хотел, чтобы бренд ощущался как ручная работа, а не массовый магазин.', result:'Разработан логотип с акварельной монограммой, палитра из пудровых и кремовых тонов, упаковка (лента, коробки, крафт-пакеты), шаблоны для соцсетей и вывеска. Клиент отметил рост продаж подарочных букетов на 30% после ребрендинга.', tags:['Логотип','Палитра','Упаковка','Соцсети','Вывеска'] },
+    { title:'Кофейня «Зерно»', category:'Логотипы', desc:'Знак и леттеринг для городской кофейни', ph:'логотип · «Зерно»', bg:bg2, photos:P([bg2,bg1,bg2],3), task:'Логотип для небольшой кофейни в жилом квартале. Атмосфера — уютная, «своя», без пафоса третьей волны. Аудитория — постоянные жители района.', result:'Разработан знак на основе авторского леттеринга с характером: живая линия, тёплые цвета. Логотип используется на стаканах, пакетах с зерном и в профиле соцсетей.', tags:['Логотип','Леттеринг','Носители'] },
+    { title:'Студия керамики «Глина»', category:'Айдентика', desc:'Полный фирменный стиль ручной студии', ph:'айдентика · «Глина»', bg:bg1, photos:P([bg1,bg4,bg1,bg2],4), task:'Полный брендинг студии ручной керамики: от логотипа до оформления пространства. Важно было передать «живость» и текстуру материала.', result:'Айдентика с геометричным знаком, вдохновлённым формой гончарного круга. Нейтральная палитра с землистыми акцентами. Брендбук, этикетки, упаковка и шаблоны для Instagram.', tags:['Логотип','Брендбук','Упаковка','Этикетки','Соцсети'] },
+    { title:'Косметолог Анна Лис', category:'Соцсети', desc:'Шаблоны постов и сторис, единый профиль', ph:'соцсети · А.Лис', bg:bg2, photos:P([bg2,bg1,bg2],3), task:'Создать единый визуальный стиль для Instagram частного косметолога. До обращения профиль выглядел разрозненно: разные фильтры, нет структуры.', result:'20 шаблонов постов и 15 шаблонов сторис в единой палитре. Гид по использованию, обложки актуальных. После внедрения подписчики стали чаще сохранять публикации.', tags:['Instagram','Шаблоны постов','Шаблоны сторис','Обложки'] },
+    { title:'Юрист М. Орлова', category:'Визитки', desc:'Строгие визитки и фирменный бланк', ph:'визитка · Орлова', bg:bg1, photos:P([bg6,bg6,bg1],3), task:'Визитки для частного юриста. Статус, доверие, сдержанность — главные ценности. Не скучно, но профессионально.', result:'Двусторонняя визитка с тиснением, фирменный бланк для договоров и писем. Минималистичная верстка, тёмно-зелёный + золото. Клиент отметил, что клиенты обращают внимание на визитку на встречах.', tags:['Визитки','Фирменный бланк','Печать'] },
+    { title:'Пекарня «Тесто»', category:'Логотипы', desc:'Тёплый знак с характером для пекарни', ph:'логотип · «Тесто»', bg:bg2, photos:P([bg5,bg1,bg2],3), task:'Логотип для домашней пекарни с доставкой. Нужен «вкусный», запоминающийся знак без банальных колосков и хлебов.', result:'Знак на основе авторского шрифта с эффектом мягкого теста — буква «Т» обыгрывает форму скалки. Тёплая охристая палитра. Логотип на коробках, пакетах и в Stories.', tags:['Логотип','Шрифтовой знак','Упаковка'] },
+    { title:'Йога-студия «Вдох»', category:'Соцсети', desc:'Визуальный язык для соцсетей студии', ph:'соцсети · «Вдох»', bg:bg1, photos:P([bg1,bg2,bg3],3), task:'Студия йоги с расписанием и онлайн-занятиями хотела привести Instagram в порядок: единый стиль, спокойная атмосфера.', result:'Визуальный язык на основе мягких линий и воздушных пространств. 25 шаблонов, обложки хайлайтов, шаблоны расписания. Атмосфера — тихая, без инфошума.', tags:['Instagram','Шаблоны','Расписание','Обложки хайлайтов'] },
+    { title:'Бренд украшений «Лунь»', category:'Айдентика', desc:'Айдентика ювелирного бренда', ph:'айдентика · «Лунь»', bg:bg2, photos:P([bg2,bg1,bg2,bg4],4), task:'Создать образ небольшого бренда украшений ручной работы. Лунарная эстетика, природные мотивы, аудитория — женщины 25–40.', result:'Знак на основе полумесяца и монограммы. Серебристо-молочная палитра. Брендбук, упаковка (мешочки, коробки, открытки), шаблоны соцсетей.', tags:['Логотип','Брендбук','Упаковка','Соцсети'] },
+    { title:'Барбершоп «Бритва»', category:'Визитки', desc:'Брутальные визитки и карты лояльности', ph:'визитка · «Бритва»', bg:bg1, photos:P([bg6,bg6,bg2],3), task:'Визитки и карты лояльности для барбершопа. Стиль — мужской, чёткий, немного винтажный.', result:'Двусторонние визитки с перфорацией под карту лояльности. Тёмный фон, монохром, леттеринг. Клиент заказал сразу 1000 штук после первого тиража.', tags:['Визитки','Карта лояльности','Печать'] }
+  ]; }
+  plansData = [
+    { badge:'Точечно',     name:'Экспресс',            subtitle:'Конкретная задача — без объяснений с нуля',      features:['Одна задача с чётким ТЗ','Правка или адаптация в стиль'],                        timing:'1–2 дня · 2 круга правок',          oldPrice:null,                        price:'3 000 ₽',    btnLabel:'Заказать', popular:false },
+    { badge:'Старт',       name:'Первое лицо',          subtitle:'Бизнес получает образ, который не стыдно показать', features:['Логотип с нуля — 1 концепция','Визитка и баннер для соцсети'],               timing:'5–7 дней · 2 круга правок',          oldPrice:'14 000 ₽ по отдельности',   price:'10 000 ₽',   btnLabel:'Заказать', popular:false },
+    { badge:'Популярный',  name:'Узнаваемый старт',     subtitle:'Единый образ бренда с первого дня работы',         features:['Логотип — 3 концепции','Единый стиль в соцсетях','Визитка и 3 поста'],         timing:'10–14 дней · 3 круга правок',        oldPrice:'22 000 ₽ по отдельности',   price:'15 000 ₽',   btnLabel:'Заказать', popular:true  },
+    { badge:'Система',     name:'Визуальный язык',      subtitle:'Бренд начинает говорить последовательно везде',    features:['Логотип + мини-брендбук','Единый стиль во всех точках'],                        timing:'14–18 дней · 3 круга правок',        oldPrice:'34 000 ₽ по отдельности',   price:'25 000 ₽',   btnLabel:'Заказать', popular:false },
+    { badge:'Под ключ',    name:'Бренд под ключ',       subtitle:'Готовы к любой точке касания с клиентом',          features:['Полная айдентика','Упаковка, соцсети, 6 постов'],                               timing:'21–28 дней · правки без лимита',     oldPrice:'65 000 ₽ по отдельности',   price:'50 000 ₽',   btnLabel:'Заказать', popular:false },
+    { badge:'Индивидуально',name:'Нестандартная задача', subtitle:'Когда пакеты не описывают вашу ситуацию',          features:['Масштабный или уникальный запрос','Состав и сроки под вашу задачу'],              timing:'Гибкие сроки · гибкий состав',       oldPrice:null,                        price:'по запросу', btnLabel:'Обсудить', popular:false }
+  ];
+  servicesData = ['Экспресс', 'Первое лицо', 'Узнаваемый старт', 'Визуальный язык', 'Бренд под ключ', 'Нестандартная задача'];
+  socialsData = [
+    { label: 'Telegram', value: '@matrenkinodsgn', href: 'https://t.me/matrenkinodsgn' },
+    { label: 'ВКонтакте', value: 'vk.com/matrenkino_dsgn', href: 'https://vk.com/matrenkino_dsgn' },
+    { label: 'Instagram', value: '@matrenkino', href: 'https://www.instagram.com/matrenkino/' },
+    { label: 'Телефон', value: '+7 996 707 22-92', href: 'tel:+79967072292' },
+    { label: 'Почта', value: 'matrenkinodsgn@gmail.com', href: 'mailto:matrenkinodsgn@gmail.com' }
+  ];
+
+  componentDidMount() {
+    this._initAdvCards();
+    this._initSakura();
+    this._initBackToTop();
+    this._startPricingAuto();
+    // init pricing track position
+    const pt = document.getElementById('pricing-track');
+    if (pt) pt.style.transform = 'translateX(0%)';
+  }
+
+  componentWillUnmount() {
+    if (this._sakuraRAF) cancelAnimationFrame(this._sakuraRAF);
+    if (this._sakuraCleanup) this._sakuraCleanup();
+    if (this._backTopCleanup) this._backTopCleanup();
+    this._stopPricingAuto();
+  }
+
+  // Auto-advancing pricing carousel: cycles through both slides so every plan
+  // is shown without the user having to swipe. Respects reduced-motion, and is
+  // paused on hover / after manual interaction (restarted on leave).
+  _startPricingAuto() {
+    this._stopPricingAuto();
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this._pricingTimer = setInterval(() => {
+      this.setState(s => ({ pricingSlide: s.pricingSlide === 0 ? 1 : 0 }));
+    }, 5000);
+  }
+
+  _stopPricingAuto() {
+    if (this._pricingTimer) { clearInterval(this._pricingTimer); this._pricingTimer = null; }
+  }
+
+  _restartPricingAuto() {
+    this._startPricingAuto();
+  }
+
+  // Floating "back to top" button: appears once the user scrolls down a bit.
+  _initBackToTop() {
+    const update = () => {
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      const y = window.scrollY || (document.scrollingElement ? document.scrollingElement.scrollTop : 0) || 0;
+      const show = y > 320;
+      btn.style.opacity = show ? '1' : '0';
+      btn.style.pointerEvents = show ? 'auto' : 'none';
+      btn.style.transform = show ? 'translateY(0)' : 'translateY(10px)';
+    };
+    window.addEventListener('scroll', update, { passive: true, capture: true });
+    update();
+    this._backTopCleanup = () => window.removeEventListener('scroll', update, { capture: true });
+  }
+
+  _makePetal(W, H, colors, initial) {
+    const size = 4.5 + Math.random() * 7;
+    return {
+      x: Math.random() * W,
+      y: initial ? Math.random() * H : -24,
+      size,
+      vy: 0.45 + Math.random() * 1.0 + size * 0.04,
+      vx: -0.25 + Math.random() * 0.5,
+      sway: 0.35 + Math.random() * 0.85,
+      swayPhase: Math.random() * Math.PI * 2,
+      swaySpeed: 0.008 + Math.random() * 0.018,
+      rot: Math.random() * Math.PI * 2,
+      vrot: -0.018 + Math.random() * 0.036,
+      flutter: Math.random() * Math.PI * 2,
+      flutterSpeed: 0.018 + Math.random() * 0.028,
+      alpha: 0.6 + Math.random() * 0.32,
+      color: colors[Math.floor(Math.random() * colors.length)]
+    };
+  }
+
+  _drawPetal(ctx, p, vis) {
+    const s = p.size;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.scale(1, Math.max(0.35, Math.sin(p.flutter)));
+    ctx.globalAlpha = p.alpha * vis;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.moveTo(0, -s);
+    ctx.bezierCurveTo(s * 0.72, -s * 0.62, s * 0.72, s * 0.55, 0, s);
+    ctx.bezierCurveTo(-s * 0.72, s * 0.55, -s * 0.72, -s * 0.62, 0, -s);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  _initSakura() {
+    if (this._sakuraRAF) return;
+    const canvas = document.getElementById('sakura-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colors = ['#f2c4ce', '#d4717e', '#e8a5b8'];
+    const MAX = 64, BASE = 7;
+    let W = 0, H = 0;
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      this._branchScale = W < 600 ? 0.52 : (W < 950 ? 0.78 : 1);
+      const hdr = document.querySelector('header');
+      this._headerH = (hdr ? hdr.offsetHeight : 80) + 6;
+    };
+    resize();
+
+    const petals = [];
+    for (let i = 0; i < MAX; i++) petals.push(this._makePetal(W, H, colors, true));
+
+    // Scroll progress via viewport-relative position of the content root.
+    // Works regardless of which element actually scrolls (window or an inner
+    // wrapper), because getBoundingClientRect is always relative to the viewport.
+    const contentRoot = canvas.parentElement || document.body;
+    const getProgress = () => {
+      const total = contentRoot.scrollHeight - H;
+      if (total <= 4) return 0;
+      const top = contentRoot.getBoundingClientRect().top;
+      return Math.min(1, Math.max(0, -top / total));
+    };
+    let scrollProgress = 0;
+    const onScroll = () => { scrollProgress = getProgress(); };
+    onScroll();
+
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let smooth = 0;
+    const draw = () => {
+      scrollProgress = getProgress();
+      smooth += (scrollProgress - smooth) * 0.08;
+      ctx.clearRect(0, 0, W, H);
+      for (let i = 0; i < petals.length; i++) {
+        const p = petals[i];
+        p.y += p.vy;
+        p.swayPhase += p.swaySpeed;
+        p.x += Math.sin(p.swayPhase) * p.sway + p.vx;
+        p.rot += p.vrot;
+        p.flutter += p.flutterSpeed;
+        if (p.y > H + 24) { p.y = -24; p.x = Math.random() * W; }
+        if (p.x > W + 24) p.x = -24;
+        else if (p.x < -24) p.x = W + 24;
+        let vis;
+        if (i < BASE) vis = 1;
+        else {
+          const t = (i - BASE) / (MAX - BASE);
+          vis = Math.max(0, Math.min(1, (smooth - t) / 0.1));
+        }
+        if (vis <= 0.01) continue;
+        this._drawPetal(ctx, p, vis);
+      }
+      this._sakuraRAF = requestAnimationFrame(draw);
+    };
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    this._sakuraCleanup = () => {
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('scroll', onScroll, { capture: true });
+    };
+
+    if (reduced) {
+      scrollProgress = 0.5;
+      ctx.clearRect(0, 0, W, H);
+      for (let i = 0; i < BASE * 3; i++) this._drawPetal(ctx, petals[i], 0.8);
+    } else {
+      draw();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    prevState = prevState || {};
+    if (prevState.page !== this.state.page) {
+      setTimeout(() => this._initAdvCards(), 60);
+    }
+    if (prevState.reviewSlide !== this.state.reviewSlide) {
+      const track = document.querySelector('.rev-track');
+      if (track) track.style.transform = 'translateX(-' + (this.state.reviewSlide * 100) + '%)';
+    }
+    if (prevState.activeProject !== this.state.activeProject || prevState.projectSlide !== this.state.projectSlide) {
+      const track = document.getElementById('proj-photo-track');
+      if (track) {
+        track.style.transform = 'translateX(-' + (this.state.projectSlide * 100) + '%)';
+        // Set per-photo backgrounds
+        const photos = this.state.activeProject ? this.state.activeProject.photos : [];
+        const slides = track.children;
+        for (let i = 0; i < slides.length; i++) {
+          if (photos[i]) slides[i].style.background = photos[i].bg;
+        }
+      }
+    }
+  }
+
+  _initAdvCards() {
+    // Track cards that already animated so re-renders never replay the animation.
+    if (!this._advShown) this._advShown = new Set();
+
+    const cards = [...document.querySelectorAll('.adv-card')];
+    if (!cards.length) return;
+
+    // Give each card a stable identity from its order-number text (01, 02…).
+    cards.forEach((c, i) => {
+      const numEl = c.querySelector('.adv-num');
+      c._advKey = (numEl && numEl.textContent.trim()) || String(i);
+    });
+
+    // Cards seen before: make sure they are visible (survive DOM recreation).
+    cards.forEach(c => {
+      if (this._advShown.has(c._advKey)) c.classList.remove('adv-hidden');
+    });
+
+    const newCards = cards.filter(c => !this._advShown.has(c._advKey));
+    if (!newCards.length) return;
+
+    newCards.forEach(c => c.classList.add('adv-hidden'));
+
+    if (!('IntersectionObserver' in window)) {
+      newCards.forEach(c => { c.classList.remove('adv-hidden'); this._advShown.add(c._advKey); });
+      return;
+    }
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const idx = newCards.indexOf(e.target);
+          const key = e.target._advKey;
+          setTimeout(() => {
+            e.target.classList.remove('adv-hidden');
+            this._advShown.add(key);
+          }, idx * 130);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    newCards.forEach(c => obs.observe(c));
+  }
+
+  go(page) {
+    this.setState({ page, mobileOpen: false });
+    try { window.scrollTo({ top: 0, behavior: 'instant' }); } catch (e) { window.scrollTo(0, 0); }
+  }
+  scrollToForm() {
+    setTimeout(() => {
+      const el = document.getElementById('request-form');
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+    }, 60);
+  }
+  starStr(n) { return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n); }
+
+  renderVals() {
+    const s = this.state;
+    const navDef = [
+      { label: 'Главная', page: 'home' },
+      { label: 'Портфолио', page: 'portfolio' },
+      { label: 'Тарифы', page: 'pricing' },
+      { label: 'Отзывы', page: 'reviews' },
+      { label: 'О себе', page: 'about' }
+    ];
+    const navItems = navDef.map(n => ({
+      label: n.label,
+      onClick: () => this.go(n.page),
+      style: { display: 'flex', alignItems: 'center', padding: '0 20px', cursor: 'pointer', textDecoration: 'none', fontSize: '15px', fontWeight: 600, color: s.page === n.page ? '#d4717e' : '#2e3d35' }
+    }));
+
+    const filterDef = ['Все', 'Логотипы', 'Айдентика', 'Визитки', 'Соцсети'];
+    const filters = filterDef.map(f => {
+      const active = s.filter === f;
+      return {
+        label: f,
+        onClick: () => this.setState({ filter: f }),
+        style: { border: '1.5px solid ' + (active ? '#d4717e' : 'rgba(46,61,53,.18)'), background: active ? '#d4717e' : 'transparent', color: active ? '#fff' : '#2e3d35', padding: '11px 22px', borderRadius: '999px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', transition: 'all .25s ease' }
+      };
+    });
+
+    const projects = (s.filter === 'Все' ? this.projectsData : this.projectsData.filter(p => p.category === s.filter)).map(p => ({ ...p, open: () => this.setState({ activeProject: p }) }));
+
+    const plans = this.plansData.map(pl => ({
+      ...pl,
+      cardCls: 'plan-card' + (pl.popular ? ' plan-card-popular' : '') + (s.planChosen && pl.name === s.selectedPlan ? ' plan-card-selected' : ''),
+      btnCls: 'plan-btn' + (pl.popular ? ' plan-btn-popular' : ''),
+      badgeCls: 'plan-badge' + (pl.popular ? ' plan-badge-popular' : ''),
+      priceCls: 'plan-price' + (pl.popular ? ' plan-price-popular' : ''),
+      checkColor: pl.popular ? '#5e9277' : '#7aab8f',
+      timingChips: String(pl.timing).split('·').map(s => s.trim()).filter(Boolean).map(label => ({
+        label,
+        isRevise: /прав/i.test(label),
+        isTime: !/прав/i.test(label) && /дн|срок|недел/i.test(label),
+        isScope: !/прав/i.test(label) && !/дн|срок|недел/i.test(label)
+      })),
+      hasOldPrice: !!pl.oldPrice,
+      choose: () => { this.setState({ selectedPlan: pl.name, planChosen: true }); this.scrollToForm(); }
+    }));
+
+    const plansSlide0 = plans.slice(0, 3);
+    const plansSlide1 = plans.slice(3, 6);
+
+    const pricingDots = [0, 1].map(i => ({
+      onClick: () => { this.setState({ pricingSlide: i }); this._restartPricingAuto(); },
+      cls: i === s.pricingSlide ? 'pricing-dot-active' : ''
+    }));
+
+    const _ruMonths = { 'январь':0,'января':0,'февраль':1,'февраля':1,'март':2,'марта':2,'апрель':3,'апреля':3,'май':4,'мая':4,'июнь':5,'июня':5,'июль':6,'июля':6,'август':7,'августа':7,'сентябрь':8,'сентября':8,'октябрь':9,'октября':9,'ноябрь':10,'ноября':10,'декабрь':11,'декабря':11 };
+    const _reviewDateVal = (r) => {
+      if (typeof r._ts === 'number') return r._ts;
+      const d = String(r.date || '').toLowerCase().trim();
+      const ym = d.match(/(\d{4})/);
+      const year = ym ? +ym[1] : 0;
+      let month = 0;
+      for (const k in _ruMonths) { if (d.indexOf(k) !== -1) { month = _ruMonths[k]; break; } }
+      return year * 12 + month;
+    };
+    const reviews = s.reviews
+      .slice()
+      .sort((a, b) => _reviewDateVal(b) - _reviewDateVal(a))
+      .map(r => ({ ...r, stars: this.starStr(r.rating), initial: r.name.trim().charAt(0) }));
+
+    const ratingStars = [1, 2, 3, 4, 5].map(n => ({
+      n,
+      set: () => this.setState({ rev: { ...this.state.rev, rating: n } }),
+      style: { cursor: 'pointer', fontSize: '32px', lineHeight: 1, transition: 'color .15s,transform .15s', color: n <= s.rev.rating ? '#d4717e' : 'rgba(46,61,53,.18)' }
+    }));
+
+    const planLabels = {};
+    this.plansData.forEach(pl => { planLabels[pl.name] = pl.name + ' — ' + String(pl.price).replace(/ /g, "�"); });
+
+    return {
+      page: s.page,
+      isHome: s.page === 'home',
+      isPortfolio: s.page === 'portfolio',
+      isPricing: s.page === 'pricing',
+      isReviews: s.page === 'reviews',
+      isAbout: s.page === 'about',
+      mobileOpen: s.mobileOpen,
+      toggleMobile: () => this.setState({ mobileOpen: !this.state.mobileOpen }),
+      navItems,
+      scrollTop: () => {
+        try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
+        const se = document.scrollingElement;
+        if (se) { try { se.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { se.scrollTop = 0; } }
+      },
+      goHome: () => this.go('home'),
+      goPortfolio: () => this.go('portfolio'),
+      goPricing: () => this.go('pricing'),
+      goReviews: () => this.go('reviews'),
+      goAbout: () => this.go('about'),
+      tags: this.tags,
+      tagsLine: this.tags.join('  ·  '),
+      stats: this.statsData,
+      advantages: this.advantagesData,
+      process: this.processData,
+      featured: this.projectsData.slice(0, 4).map(p => ({ ...p, open: () => this.setState({ activeProject: p }) })),
+      projects,
+      filters,
+      reviewsPreview: reviews.slice().sort(function(a, b) {
+        // primary: rating desc, secondary: text length desc
+        if (b.rating !== a.rating) return b.rating - a.rating;
+        return b.text.length - a.text.length;
+      }).slice(0, 3),
+      reviewSlide: s.reviewSlide,
+
+      reviewSlidePrev: () => this.setState({ reviewSlide: (this.state.reviewSlide - 1 + reviews.slice(0,3).length) % reviews.slice(0,3).length }),
+      reviewSlideNext: () => this.setState({ reviewSlide: (this.state.reviewSlide + 1) % reviews.slice(0,3).length }),
+      reviewDots: reviews.slice(0, 3).map((_, i) => ({
+        active: i === s.reviewSlide,
+        onClick: () => this.setState({ reviewSlide: i }),
+        dotActive: i === s.reviewSlide,
+        cls: i === s.reviewSlide ? 'rev-dot-active' : ''
+      })),
+      reviews,
+      plans,
+      plansSlide0,
+      plansSlide1,
+      pricingDots,
+      trackTransform: 'translateX(-' + (s.pricingSlide * 100) + '%)',
+      pricingPrev: () => { this.setState(s => ({ pricingSlide: (s.pricingSlide - 1 + 2) % 2 })); this._restartPricingAuto(); },
+      pricingNext: () => { this.setState(s => ({ pricingSlide: (s.pricingSlide + 1) % 2 })); this._restartPricingAuto(); },
+      pausePricingAuto: () => this._stopPricingAuto(),
+      resumePricingAuto: () => this._startPricingAuto(),
+      pricingSlide: s.pricingSlide,
+      selectedPlan: s.selectedPlan,
+      selectedPlanLabel: planLabels[s.selectedPlan] || s.selectedPlan,
+      services: this.servicesData,
+      socials: this.socialsData,
+      year: 2026,
+
+
+
+      proj: s.proj,
+      projSent: s.projSent,
+      projForm: !s.projSent,
+      projError: s.projError,
+      onProjName: e => this.setState({ proj: { ...this.state.proj, name: e.target.value }, projError: false }),
+      onProjContact: e => this.setState({ proj: { ...this.state.proj, contact: e.target.value }, projError: false }),
+      onProjTask: e => this.setState({ proj: { ...this.state.proj, task: e.target.value } }),
+      submitProj: e => {
+        e.preventDefault();
+        const p = this.state.proj;
+        if (!p.name.trim() || !p.contact.trim()) { this.setState({ projError: true }); return; }
+        // Telegram integration point: POST to your bot's sendMessage here.
+        this.setState({ projSent: true });
+        try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (err) {}
+      },
+      resetProj: () => this.setState({ projSent: false, proj: { name: '', contact: '', task: '' } }),
+
+      activeProject: s.activeProject,
+      openProject: (p) => this.setState({ activeProject: p, projectSlide: 0 }),
+      closeProject: () => this.setState({ activeProject: null, projectSlide: 0 }),
+      hasProject: !!s.activeProject,
+      projModalTitle: s.activeProject ? s.activeProject.title : '',
+      projModalCategory: s.activeProject ? s.activeProject.category : '',
+      projModalTask: s.activeProject ? s.activeProject.task : '',
+      projModalResult: s.activeProject ? s.activeProject.result : '',
+      projModalTags: s.activeProject ? s.activeProject.tags : [],
+
+      projModalPhotos: s.activeProject ? s.activeProject.photos : [],
+      projPhotoDots: s.activeProject ? s.activeProject.photos.map((_, i) => ({
+        onClick: () => this.setState({ projectSlide: i }),
+        cls: i === s.projectSlide ? 'proj-photo-dot-active' : ''
+      })) : [],
+      projPrev: () => {
+        const len = (this.state.activeProject && this.state.activeProject.photos.length) || 1;
+        this.setState({ projectSlide: (this.state.projectSlide - 1 + len) % len });
+      },
+      projNext: () => {
+        const len = (this.state.activeProject && this.state.activeProject.photos.length) || 1;
+        this.setState({ projectSlide: (this.state.projectSlide + 1) % len });
+      },
+      reviewOpen: s.reviewOpen,
+      openReview: () => this.setState({ reviewOpen: true, revSent: false, revError: false }),
+      closeReview: () => this.setState({ reviewOpen: false }),
+      stop: e => e.stopPropagation(),
+      revForm: !s.revSent,
+      revSent: s.revSent,
+      revError: s.revError,
+      rev: s.rev,
+      ratingStars,
+      onRevName: e => this.setState({ rev: { ...this.state.rev, name: e.target.value }, revError: false }),
+      onRevService: e => this.setState({ rev: { ...this.state.rev, service: e.target.value } }),
+      onRevText: e => this.setState({ rev: { ...this.state.rev, text: e.target.value }, revError: false }),
+      submitReview: e => {
+        e.preventDefault();
+        const r = this.state.rev;
+        if (!r.name.trim() || !r.text.trim()) { this.setState({ revError: true }); return; }
+        const _now = new Date();
+        const _mNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+        const _dateStr = _mNames[_now.getMonth()] + ' ' + _now.getFullYear();
+        const _ts = _now.getFullYear() * 12 + _now.getMonth() + 1000; // +1000 keeps fresh reviews on top
+        const newReview = { name: r.name, service: r.service, date: _dateStr, rating: r.rating, text: r.text, _ts: _ts };
+        // Telegram integration point: POST review to your bot's sendMessage here.
+        this.setState({ reviews: [newReview, ...this.state.reviews], revSent: true, rev: { name: '', service: 'Экспресс', text: '', rating: 5 } });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
