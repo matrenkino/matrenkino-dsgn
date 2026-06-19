@@ -554,7 +554,6 @@
                 <span style="color:#c25e6b;font-size:14px;font-weight:600">Заполните имя и контакт, пожалуйста.</span>
               </sc-if>
               <button type="submit" style="background:#d4717e;color:#fff;border:none;padding:17px;border-radius:16px;font-size:17px;font-weight:600;cursor:pointer;transition:all .25s ease;box-shadow:0 10px 26px rgba(212,113,126,.3)" style-hover="background:#c25e6b">Отправить заявку</button>
-              <p style="font-size:13px;color:rgba(46,61,53,.5);text-align:center;margin:0">Заявка придёт в Telegram.</p>
               <p style="font-size:11px;color:#a0897e;text-align:center;margin:6px 0 0">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных согласно <a href="privacy.dc.html" style="color:#d4717e;text-decoration:none">политике конфиденциальности</a></p>
             </form>
           </div>
@@ -703,14 +702,14 @@
         <!-- Photo slider — dominant -->
         <div id="proj-modal-hero" class="proj-hero" style="position:relative;height:56vh;min-height:300px;overflow:hidden;flex-shrink:0">
           <div id="proj-photo-track" style="display:flex;width:100%;height:100%;transition:transform .38s cubic-bezier(.4,0,.2,1)">
-            <sc-for list="{{ projModalPhotos }}" as="photo" hint-placeholder-count="3">
+            <sc-for list="{{ projModalPhotos }}" as="photo" hint-placeholder-count="20">
               <div style="flex-shrink:0;width:100%;height:100%;background:{{ photo.bg }}"></div>
             </sc-for>
           </div>
           <button onClick="{{ projPrev }}" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(250,246,242,.88);color:#2e3d35;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(46,61,53,.16);transition:all .2s" style-hover="background:#fff">‹</button>
           <button onClick="{{ projNext }}" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(250,246,242,.88);color:#2e3d35;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(46,61,53,.16);transition:all .2s" style-hover="background:#fff">›</button>
           <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:7px;align-items:center">
-            <sc-for list="{{ projPhotoDots }}" as="dot" hint-placeholder-count="3">
+            <sc-for list="{{ projPhotoDots }}" as="dot" hint-placeholder-count="20">
               <button onClick="{{ dot.onClick }}" class="proj-photo-dot {{ dot.cls }}"></button>
             </sc-for>
           </div>
